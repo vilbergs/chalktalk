@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "id": "entry-pass-across",
+  "name": "Zone entry, pass across",
+  "status": "published",
+  "tags": ["offensive-zone", "zone-entry", "shooting"],
+  "caption": "Your LW has crossed their blue line on the left with the puck and is looking across. Your center is driving the middle. You are on the right, still just outside the line, with their D backing off you. The middle lane is about to open.",
+  "layout": {
+    "players": [
+      { "id": "lw", "x": 14, "y": 126, "h": 30 },
+      { "id": "c", "x": 44, "y": 116, "h": 0 },
+      { "id": "rw", "x": 66, "y": 110, "h": 0 },
+      { "id": "ld", "x": 30, "y": 92, "h": 0 },
+      { "id": "rd", "x": 58, "y": 90, "h": 0 },
+      { "id": "g", "x": 42.5, "y": 13 },
+      { "id": "ord", "x": 24, "y": 146, "h": 180 },
+      { "id": "old", "x": 58, "y": 148, "h": 180 },
+      { "id": "orw", "x": 16, "y": 108, "h": 0 },
+      { "id": "oc", "x": 38, "y": 104, "h": 0 },
+      { "id": "olw", "x": 74, "y": 100, "h": 0 },
+      { "id": "og", "x": 42.5, "y": 187 }
+    ],
+    "puck": "lw"
+  },
+  "questions": [
+    {
+      "id": "entry-pass-across-choice",
+      "type": "choice",
+      "prompt": "What do you do?",
+      "options": [
+        {
+          "text": "Enter now on the right, a half-step behind the center, so I am the late option in the right circle for the pass across.",
+          "grade": 2,
+          "feedback": "Yes. The center drives their D back; you arrive late in the space he leaves, facing the puck with your forehand open for a one-timer.",
+          "plan": {
+            "label": "Late option, right circle",
+            "seconds": 3,
+            "moves": [["rw", 64, 152], ["c", 44, 158], ["lw", 20, 160], ["ord", 24, 164], ["old", 56, 166], ["olw", 70, 122]],
+            "puck": { "to": "rw", "at": 0.8 }
+          }
+        },
+        {
+          "text": "Drive to the net with the center.",
+          "grade": 1,
+          "feedback": "Two at the net and the pass has nowhere to go. The late man in the circle is the dangerous option, and that is you."
+        },
+        {
+          "text": "Stay outside the blue line as the safety.",
+          "grade": 0,
+          "feedback": "Your D are the safety. You are the third attacker on a 3-on-2; staying out makes it a 2-on-2."
+        },
+        {
+          "text": "Cross behind the center to the left side.",
+          "grade": 0,
+          "feedback": "That puts all three forwards on the puck side. Their D can collapse on the LW with no reason to look right."
+        }
+      ]
+    },
+    {
+      "id": "entry-pass-across-spot",
+      "type": "spot",
+      "prompt": "Tap where you want to receive the pass.",
+      "target": { "x": 64, "y": 152 },
+      "label": "Right circle, late",
+      "r1": 9,
+      "r2": 20,
+      "fb": {
+        "right": "The right circle, a step behind the center, forehand to the puck. That is the one-timer spot.",
+        "close": "Right area. Arrive a little later and a little lower; the space opens behind the center, not beside him.",
+        "wrong": "The center takes their D to the net. You want the space he leaves: the top of the right circle, facing the puck."
+      },
+      "plan": {
+        "label": "Late option, right circle",
+        "seconds": 3,
+        "moves": [["rw", 64, 152], ["c", 44, 158], ["lw", 20, 160], ["ord", 24, 164], ["old", 56, 166], ["olw", 70, 122]],
+        "puck": { "to": "rw", "at": 0.8 }
+      }
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "id": "regroup",
+  "name": "Regroup",
+  "status": "published",
+  "tags": ["neutral-zone", "regroup", "timing"],
+  "caption": "Your D has the puck at your blue line with time. The forwards had gone ahead and are now swinging back to regroup. Their team has set up a 1-2-2 in the neutral zone.",
+  "layout": {
+    "players": [
+      { "id": "ld", "x": { "m": 22.5 }, "y": 70, "h": 0 },
+      { "id": "rd", "x": { "m": 62.5 }, "y": 62 },
+      { "id": "g", "x": 42.5, "y": 13 },
+      { "id": "c", "x": 42.5, "y": 92, "h": { "m": 300 } },
+      { "id": "rw", "x": 66, "y": 100, "h": 180 },
+      { "id": "lw", "x": 19, "y": 100, "h": 180 },
+      { "id": "oc", "x": 42.5, "y": 112 },
+      { "id": "olw", "x": 66, "y": 125 },
+      { "id": "orw", "x": 19, "y": 125 },
+      { "id": "old", "x": 60, "y": 150 },
+      { "id": "ord", "x": 25, "y": 150 },
+      { "id": "og", "x": 42.5, "y": 187 }
+    ],
+    "puck": "ld"
+  },
+  "questions": [
+    {
+      "id": "regroup-choice",
+      "type": "choice",
+      "prompt": "What do you do?",
+      "options": [
+        {
+          "text": "Swing back toward my D, low and wide on my side, timing it so I am skating up ice when he is ready to pass.",
+          "grade": 2,
+          "feedback": "Right. A regroup is about timing: come back far enough that you receive the puck going forward, with speed, instead of flat-footed at the red line.",
+          "plan": {
+            "label": "Swing and time it",
+            "seconds": 3,
+            "moves": [
+              ["rw", 74, 84],
+              ["c", 46, 88],
+              ["lw", 16, 86],
+              ["ld", {"m": 24.5}, 76],
+              ["oc", 42.5, 106]
+            ],
+            "puck": { "to": "rw", "at": 0.85 }
+          }
+        },
+        {
+          "text": "Stop at the red line on my side and wait for the pass.",
+          "grade": 0,
+          "feedback": "A stationary target in front of their 1-2-2 is exactly what the trap wants. You would receive it standing still with a winger on you."
+        },
+        {
+          "text": "Stretch to their blue line for a long pass over the top.",
+          "grade": 1,
+          "feedback": "It can work once as a surprise, but through a 1-2-2 the long pass is usually picked off, and you are offside if it is chipped in. Keep it as the second option."
+        },
+        {
+          "text": "Cross over to the left side to confuse them.",
+          "grade": 0,
+          "feedback": "Two wingers on one side leaves your D with nobody on the right. Keep your lane; the center is the one who crosses."
+        }
+      ]
+    },
+    {
+      "id": "regroup-spot",
+      "type": "spot",
+      "prompt": "Tap the spot you swing back to before turning up ice.",
+      "target": { "x": 74, "y": 82 },
+      "label": "Swing low and wide",
+      "r1": 10,
+      "r2": 24,
+      "fb": {
+        "right": "That is the swing: low enough to receive the pass going forward, wide enough to keep your lane.",
+        "close": "Close. Come a little deeper; you want to be skating up ice with speed when the pass arrives, not just starting.",
+        "wrong": "Think timing, not position. Come back low and wide on your side so that you are moving forward when your D is ready."
+      },
+      "plan": {
+        "label": "Swing and time it",
+        "seconds": 3,
+        "moves": [
+          ["rw", 74, 84],
+          ["c", 46, 88],
+          ["lw", 16, 86],
+          ["ld", {"m": 24.5}, 76],
+          ["oc", 42.5, 106]
+        ],
+        "puck": { "to": "rw", "at": 0.85 }
+      }
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "schema": 1,
+  "id": "breakout",
+  "name": "Breakout",
+  "status": "published",
+  "tags": ["defensive-zone", "breakout", "strong-weak-side"],
+  "caption": "Your D has just picked up the puck behind your net and is turning up ice to the {side}. Their first forechecker is about 20 feet away and closing.",
+  "layout": {
+    "players": [
+      { "id": "rd", "x": { "m": 50.5 }, "y": 7, "h": { "m": 90 } },
+      { "id": "ld", "x": { "m": 24.5 }, "y": 20 },
+      { "id": "g", "x": 42.5, "y": 13 },
+      { "id": "oc", "x": { "m": 44.5 }, "y": 27, "h": 180 },
+      { "id": "olw", "x": { "m": 68.5 }, "y": 58 },
+      { "id": "orw", "x": { "m": 16.5 }, "y": 58 },
+      { "id": "old", "x": { "m": 62.5 }, "y": 78 },
+      { "id": "ord", "x": { "m": 22.5 }, "y": 78 },
+      { "id": "c", "x": 42.5, "y": 34, "h": 0 },
+      { "id": "rw", "x": 68, "y": 42 },
+      { "id": "lw", "x": 17, "y": 42 },
+      { "id": "og", "x": 42.5, "y": 187 }
+    ],
+    "puck": "rd"
+  },
+  "questions": [
+    {
+      "id": "breakout-strong-choice",
+      "type": "choice",
+      "prompt": "Your D is turning up ice toward your side. What do you do?",
+      "when": { "side": "right" },
+      "options": [
+        {
+          "text": "Get to the right half-wall, stop, face the D with my forehand open, and call for it.",
+          "grade": 2,
+          "feedback": "Yes. Be there before he turns up ice, stopped, so he sees a target and not a moving guess. Decide chip, carry or reverse before the puck arrives.",
+          "plan": {
+            "label": "Half-wall, stopped",
+            "seconds": 3,
+            "moves": [
+              ["rw", 78, 40],
+              ["rd", {"m": 56.5}, 18],
+              ["c", 44, 52],
+              ["lw", 16, 52],
+              ["oc", {"m": 48.5}, 16],
+              ["olw", {"m": 68.5}, 52]
+            ],
+            "puck": { "to": "rw", "at": 0.75 }
+          }
+        },
+        {
+          "text": "Skate up through the half-wall toward the blue line so I am moving when the pass comes.",
+          "grade": 0,
+          "feedback": "Then the pass has to lead a moving target through the forechecker. If it misses, you are the one furthest from the puck."
+        },
+        {
+          "text": "Go low to help my D behind the net.",
+          "grade": 0,
+          "feedback": "That is the center’s job. Two helpers low and nobody on the wall means there is no outlet when he turns."
+        },
+        {
+          "text": "Cut into the middle to give him a pass up the gut.",
+          "grade": 1,
+          "feedback": "The center is already filling the middle. Your job is width; two players in the middle makes the wall pass impossible."
+        }
+      ]
+    },
+    {
+      "id": "breakout-weak-choice",
+      "type": "choice",
+      "prompt": "Your D is turning up ice away from your side. What do you do?",
+      "when": { "side": "left" },
+      "options": [
+        {
+          "text": "Hold my half-wall but start up ice slowly, so I am the weak-side option for a cross-ice or a chip to the far side.",
+          "grade": 2,
+          "feedback": "Good. When the breakout goes the other way, the weak-side winger is the second wave: wide, timing it so you hit the blue line with speed if the puck comes across.",
+          "plan": {
+            "label": "Weak-side timing",
+            "seconds": 3,
+            "moves": [
+              ["rw", 70, 62],
+              ["rd", {"m": 56.5}, 18],
+              ["lw", {"m": 76.5}, 42],
+              ["c", 44, 52],
+              ["oc", {"m": 48.5}, 16]
+            ],
+            "puck": { "to": "lw", "at": 0.75 }
+          }
+        },
+        {
+          "text": "Stop on my half-wall, face my D and wait.",
+          "grade": 1,
+          "feedback": "Fine on the strong side, but on the weak side a stopped winger is nowhere near the play. Stay wide, but start moving."
+        },
+        {
+          "text": "Skate across to the puck side to give him a closer option.",
+          "grade": 0,
+          "feedback": "Now both wingers and the center are on one half of the ice, and the whole far side is empty for them to pinch into."
+        },
+        {
+          "text": "Go straight to the blue line and wait for a stretch pass.",
+          "grade": 0,
+          "feedback": "Through a forechecker and two D? Realistically that pass does not get there, and you are offside the moment it does."
+        }
+      ]
+    },
+    {
+      "id": "breakout-strong-spot",
+      "type": "spot",
+      "prompt": "Tap where you want to be when your D looks up.",
+      "when": { "side": "right" },
+      "target": { "x": 78, "y": 40 },
+      "label": "Half-wall",
+      "r1": 10,
+      "r2": 22,
+      "fb": {
+        "right": "The half-wall, stopped, forehand to the puck. Exactly where he expects you.",
+        "close": "Nearly: tighter to the boards and level with the hash marks. The D is looking for a target on the wall, not a guess in the middle.",
+        "wrong": "He is turning up ice toward you. Your spot is the right half-wall, stopped, before he looks."
+      },
+      "plan": {
+        "label": "Half-wall, stopped",
+        "seconds": 3,
+        "moves": [
+          ["rw", 78, 40],
+          ["rd", {"m": 56.5}, 18],
+          ["c", 44, 52],
+          ["lw", 16, 52],
+          ["oc", {"m": 48.5}, 16],
+          ["olw", {"m": 68.5}, 52]
+        ],
+        "puck": { "to": "rw", "at": 0.75 }
+      }
+    },
+    {
+      "id": "breakout-weak-spot",
+      "type": "spot",
+      "prompt": "Tap where you want to be when your D looks up.",
+      "when": { "side": "left" },
+      "target": { "x": 70, "y": 60 },
+      "label": "Weak-side lane",
+      "r1": 10,
+      "r2": 22,
+      "fb": {
+        "right": "Right: wide on your side, a little higher than the half-wall, already drifting up ice as the weak-side option.",
+        "close": "Close. Keep the width, just a bit higher than you tapped so you can hit the line with speed when it comes across.",
+        "wrong": "The breakout goes the other way, so you are the second wave. Stay wide on your side and start moving up, rather than coming to the puck."
+      },
+      "plan": {
+        "label": "Weak-side timing",
+        "seconds": 3,
+        "moves": [
+          ["rw", 70, 62],
+          ["rd", {"m": 56.5}, 18],
+          ["lw", {"m": 76.5}, 42],
+          ["c", 44, 52],
+          ["oc", {"m": 48.5}, 16]
+        ],
+        "puck": { "to": "lw", "at": 0.75 }
+      }
+    }
+  ]
+}

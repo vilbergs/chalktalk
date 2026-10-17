@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "id": "loose-puck",
+  "name": "Loose puck",
+  "status": "published",
+  "tags": ["defensive-zone", "puck-battle"],
+  "caption": "A rimmed puck has died on the {side} half-wall in your zone, about 10 feet from you and from their center. Nobody has it yet.",
+  "layout": {
+    "players": [
+      { "id": "c", "x": { "m": 38.5 }, "y": 40 },
+      { "id": "rw", "x": { "m": 64.5 }, "y": 50 },
+      { "id": "lw", "x": { "m": 16.5 }, "y": 46 },
+      { "id": "rd", "x": { "m": 56.5 }, "y": 22 },
+      { "id": "ld", "x": { "m": 28.5 }, "y": 20 },
+      { "id": "g", "x": 42.5, "y": 13 },
+      { "id": "oc", "x": { "m": 70.5 }, "y": 35, "h": { "m": 315 } },
+      { "id": "olw", "x": { "m": 66.5 }, "y": 30 },
+      { "id": "orw", "x": { "m": 18.5 }, "y": 36 },
+      { "id": "old", "x": { "m": 60.5 }, "y": 70 },
+      { "id": "ord", "x": { "m": 24.5 }, "y": 70 },
+      { "id": "og", "x": 42.5, "y": 187 }
+    ],
+    "puck": null,
+    "loose": { "x": { "m": 72.5 }, "y": 44 }
+  },
+  "questions": [
+    {
+      "id": "loose-puck-choice",
+      "type": "choice",
+      "prompt": "Nobody has it yet. What do you do?",
+      "options": [
+        {
+          "text": "Win the race: get there first, body between the puck and their center, chip it out along the wall if I am pressured.",
+          "grade": 2,
+          "feedback": "Right. A loose puck in your own zone is a race, and you are closest. Get your body on the wall side so he cannot come through you, then make the safe play.",
+          "plan": {
+            "label": "Win the race",
+            "seconds": 2.5,
+            "moves": [
+              ["rw", {"m": 72.5}, 45],
+              ["oc", {"m": 72.5}, 38],
+              ["c", {"m": 48.5}, 44],
+              ["rd", {"m": 58.5}, 28]
+            ],
+            "puck": { "to": "rw", "at": 0.4 }
+          }
+        },
+        {
+          "text": "Let my D take it and get up to cover the point.",
+          "grade": 0,
+          "feedback": "Your D is 20 feet away; their center is 10. Leave it and it is their puck in your zone with you out of the play."
+        },
+        {
+          "text": "Wait for the center to arrive and then go to the point.",
+          "grade": 0,
+          "feedback": "Same problem. Nobody on your team is closer than you. Hesitate and it belongs to them."
+        },
+        {
+          "text": "Go get it and carry it through the middle.",
+          "grade": 1,
+          "feedback": "Winning it is right. Carrying through the middle with their center on your back is where it goes wrong; the wall is the safe lane."
+        }
+      ]
+    }
+  ]
+}

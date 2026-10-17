@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "id": "point-shot",
+  "name": "Point shot",
+  "status": "published",
+  "tags": ["offensive-zone", "net-front", "rebounds"],
+  "caption": "Your LD has the puck at the left point with a clear look and is winding up to shoot. Their goalie can see it. You're on the right half-wall.",
+  "layout": {
+    "players": [
+      { "id": "ld", "x": 24, "y": 130 },
+      { "id": "rd", "x": 62, "y": 128 },
+      { "id": "g", "x": 42.5, "y": 13 },
+      { "id": "rw", "x": 72, "y": 162 },
+      { "id": "lw", "x": 30, "y": 182 },
+      { "id": "c", "x": 48, "y": 172 },
+      { "id": "og", "x": 42.5, "y": 187 },
+      { "id": "old", "x": 52, "y": 180 },
+      { "id": "ord", "x": 34, "y": 176 },
+      { "id": "oc", "x": 44, "y": 150 },
+      { "id": "olw", "x": 66, "y": 140 },
+      { "id": "orw", "x": 12, "y": 152 }
+    ],
+    "puck": "ld"
+  },
+  "questions": [
+    {
+      "id": "point-shot-choice",
+      "type": "choice",
+      "prompt": "Your LD is about to shoot. What do you do?",
+      "options": [
+        {
+          "text": "Drive to the far post, stick on the ice, timing it so I arrive as the shot comes.",
+          "grade": 2,
+          "feedback": "That is where rebounds go on a shot from the left. The goalie is moving left to right; the far post is behind his momentum.",
+          "plan": {
+            "label": "Far post",
+            "seconds": 3,
+            "moves": [["rw", 52, 184], ["c", 46, 180], ["lw", 32, 184], ["old", 50, 182], ["og", 43, 187]],
+            "puck": { "to": "og", "at": 0.5 }
+          }
+        },
+        {
+          "text": "Get in front of the goalie for a screen.",
+          "grade": 1,
+          "feedback": "Your center and left wing are already in front. A third screen blocks your own shot more than the goalie. The far post is empty; go there."
+        },
+        {
+          "text": "Stay on the half-wall as the high safety option.",
+          "grade": 1,
+          "feedback": "That is your RD’s job. Only hold if your RD has pinched below you; otherwise you are watching from a spot with no rebound in it."
+        },
+        {
+          "text": "Go to the corner to pick up the puck if it misses.",
+          "grade": 0,
+          "feedback": "A missed shot that rims comes to the half-wall, not the corner, and it is their D who are closest. Rebounds in front are the real chance."
+        }
+      ]
+    },
+    {
+      "id": "point-shot-spot",
+      "type": "spot",
+      "prompt": "Tap where you want to be when the shot arrives.",
+      "target": { "x": 52, "y": 184 },
+      "label": "Far post",
+      "r1": 8,
+      "r2": 16,
+      "fb": {
+        "right": "Far post, stick on the ice. On a shot from the left, the rebound comes out to the right.",
+        "close": "Nearly. Tighter to the post and a touch deeper; you want the goalie’s blind side, not the top of the crease.",
+        "wrong": "The screen is taken. Rebounds from a left-point shot kick out to the right post, so that is where you go."
+      },
+      "plan": {
+        "label": "Far post",
+        "seconds": 3,
+        "moves": [["rw", 52, 184], ["c", 46, 180], ["lw", 32, 184], ["old", 50, 182], ["og", 43, 187]],
+        "puck": { "to": "og", "at": 0.5 }
+      }
+    }
+  ]
+}

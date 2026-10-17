@@ -1,0 +1,201 @@
+{
+  "schema": 1,
+  "id": "puck-in-corner",
+  "name": "Puck in your corner",
+  "status": "published",
+  "tags": ["defensive-zone", "strong-weak-side", "coverage"],
+  "caption": "Their winger has the puck in your {side} corner and your D is on him. Their center is drifting into the slot and both their D are at the points.",
+  "layout": {
+    "players": [
+      { "id": "olw", "x": { "m": 78.5 }, "y": 14 },
+      { "id": "rd", "x": { "m": 72.5 }, "y": 19 },
+      { "id": "ld", "x": { "m": 37.5 }, "y": 12 },
+      { "id": "c", "x": { "m": 50.5 }, "y": 24 },
+      { "id": "oc", "x": { "m": 44.5 }, "y": 28 },
+      { "id": "orw", "x": { "m": 20.5 }, "y": 22 },
+      { "id": "old", "x": { "m": 62.5 }, "y": 66 },
+      { "id": "ord", "x": { "m": 22.5 }, "y": 64 },
+      { "id": "rw", "x": 68.5, "y": 46 },
+      { "id": "lw", "x": 18.5, "y": 46 },
+      { "id": "g", "x": 42.5, "y": 13 },
+      { "id": "og", "x": 42.5, "y": 187 }
+    ],
+    "puck": "olw"
+  },
+  "questions": [
+    {
+      "id": "puck-in-corner-strong-choice",
+      "type": "choice",
+      "prompt": "The puck is on your side. What do you do?",
+      "when": { "side": "right" },
+      "options": [
+        {
+          "text": "Stay high on my side, above their D at the point, stick in his shooting lane, eyes on him.",
+          "grade": 2,
+          "feedback": "That is the strong-side winger’s job. Your D has the carrier and your center has the slot. If the puck goes up to the point, you are already there.",
+          "plan": {
+            "label": "Cover the point",
+            "seconds": 3,
+            "moves": [
+              ["rw", {"m": 64.5}, 56],
+              ["old", {"m": 66.5}, 64],
+              ["olw", {"m": 76.5}, 20],
+              ["c", {"m": 48.5}, 26]
+            ],
+            "puck": { "to": "old", "at": 0.6 }
+          }
+        },
+        {
+          "text": "Collapse into the slot to help with their center.",
+          "grade": 1,
+          "feedback": "Their center is your center’s job. Collapse only if your center is beaten or the puck is about to come to the slot; otherwise you have just given their D a free shot."
+        },
+        {
+          "text": "Go into the corner to double-team the puck.",
+          "grade": 0,
+          "feedback": "Three bodies in the corner and nobody on the point. The pass up the wall is now an open shot from the blue line."
+        },
+        {
+          "text": "Cheat out toward the blue line to be ready for a breakout pass.",
+          "grade": 0,
+          "feedback": "Your team does not have the puck yet. Leaving early turns a 5-on-5 in your zone into a 5-on-4 against you."
+        }
+      ]
+    },
+    {
+      "id": "puck-in-corner-weak-choice",
+      "type": "choice",
+      "prompt": "The puck is on the far side. What do you do?",
+      "when": { "side": "left" },
+      "options": [
+        {
+          "text": "Sag toward the middle, between their far D and the slot, ready to jump out to my point if the puck comes across.",
+          "grade": 2,
+          "feedback": "Right. As the weak-side winger you protect the slot first and your point second, because the puck has to cross the whole ice to get to your D-man.",
+          "plan": {
+            "label": "Sag to the middle",
+            "seconds": 3,
+            "moves": [
+              ["rw", {"m": 28.5}, 46],
+              ["old", {"m": 20.5}, 64],
+              ["olw", {"m": 76.5}, 20],
+              ["c", {"m": 48.5}, 26]
+            ],
+            "puck": { "to": "olw", "at": 1 }
+          }
+        },
+        {
+          "text": "Stay wide on my point man, stick in his lane, exactly like the strong-side winger.",
+          "grade": 1,
+          "feedback": "Not wrong, but it is the strong-side read on the weak side. From your point there is no quick shot; the danger is the slot, so you can afford to sag in a few steps."
+        },
+        {
+          "text": "Skate across to the puck side to help in the corner.",
+          "grade": 0,
+          "feedback": "That leaves the whole far half of the zone to your center alone. If the puck comes across, their D and winger have the slot to themselves."
+        },
+        {
+          "text": "Drift up to the blue line for a stretch pass.",
+          "grade": 0,
+          "feedback": "No possession, no stretch. You are the only one who can get to the weak-side point, and you have just left it."
+        }
+      ]
+    },
+    {
+      "id": "puck-in-corner-strong-pick",
+      "type": "pick",
+      "prompt": "Tap the opponent you are responsible for right now.",
+      "when": { "side": "right" },
+      "answer": "old",
+      "partial": [],
+      "fb": {
+        "right": "Yes: the point man on your side. Stick in his lane, eyes on him, and let your D and center handle the corner and the slot.",
+        "partial": "",
+        "wrong": "Look at who can hurt you from your side. The puck carrier is your D’s problem and the slot is your center’s. The D at the point on your side is yours."
+      },
+      "plan": {
+        "label": "Cover the point",
+        "seconds": 3,
+        "moves": [
+          ["rw", {"m": 64.5}, 56],
+          ["old", {"m": 66.5}, 64],
+          ["olw", {"m": 76.5}, 20],
+          ["c", {"m": 48.5}, 26]
+        ],
+        "puck": { "to": "old", "at": 0.6 }
+      }
+    },
+    {
+      "id": "puck-in-corner-weak-pick",
+      "type": "pick",
+      "prompt": "Tap the opponent you are responsible for right now.",
+      "when": { "side": "left" },
+      "answer": "old",
+      "partial": ["oc"],
+      "fb": {
+        "right": "Yes: the far-side D is yours, but from a sagged position in the middle, because the puck has a long way to travel to him.",
+        "partial": "Close. The slot is the danger, but it is your center’s man first. You cover the far-side D while staying close enough to the middle to help.",
+        "wrong": "The puck is on the far side, so the players near it belong to your D, your center and your other winger. Your man is the one the puck would have to cross the ice to reach."
+      },
+      "plan": {
+        "label": "Sag to the middle",
+        "seconds": 3,
+        "moves": [
+          ["rw", {"m": 28.5}, 46],
+          ["old", {"m": 20.5}, 64],
+          ["olw", {"m": 76.5}, 20],
+          ["c", {"m": 48.5}, 26]
+        ],
+        "puck": { "to": "olw", "at": 1 }
+      }
+    },
+    {
+      "id": "puck-in-corner-strong-spot",
+      "type": "spot",
+      "prompt": "Tap where you should be standing.",
+      "when": { "side": "right" },
+      "target": { "x": { "m": 64.5 }, "y": 56 },
+      "label": "Above the point man",
+      "fb": {
+        "right": "That is it: between the point man and the net, high enough to stay on him, close enough to block the lane.",
+        "close": "Right idea, a few steps off. You want to be on the net side of their D, not level with him or wide of him.",
+        "wrong": "Think strong side: the puck is in your corner, so your job is the D at your point. Be between him and the net."
+      },
+      "plan": {
+        "label": "Cover the point",
+        "seconds": 3,
+        "moves": [
+          ["rw", {"m": 64.5}, 56],
+          ["old", {"m": 66.5}, 64],
+          ["olw", {"m": 76.5}, 20],
+          ["c", {"m": 48.5}, 26]
+        ],
+        "puck": { "to": "old", "at": 0.6 }
+      }
+    },
+    {
+      "id": "puck-in-corner-weak-spot",
+      "type": "spot",
+      "prompt": "Tap where you should be standing.",
+      "when": { "side": "left" },
+      "target": { "x": { "m": 28.5 }, "y": 46 },
+      "label": "Sagged, slot side",
+      "fb": {
+        "right": "Good. Weak-side winger: sagged toward the slot, still able to reach your point in two strides.",
+        "close": "Nearly. Sag a little more toward the middle; from the weak side the slot is the threat, not the point.",
+        "wrong": "The puck is on the far side. You are the weak-side winger, so you come off the wall toward the slot and stay between the far D and the net."
+      },
+      "plan": {
+        "label": "Sag to the middle",
+        "seconds": 3,
+        "moves": [
+          ["rw", {"m": 28.5}, 46],
+          ["old", {"m": 20.5}, 64],
+          ["olw", {"m": 76.5}, 20],
+          ["c", {"m": 48.5}, 26]
+        ],
+        "puck": { "to": "olw", "at": 1 }
+      }
+    }
+  ]
+}

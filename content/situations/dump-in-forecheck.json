@@ -1,0 +1,196 @@
+{
+  "schema": 1,
+  "id": "dump-in-forecheck",
+  "name": "Dump-in forecheck",
+  "status": "published",
+  "tags": ["offensive-zone", "forecheck", "roles"],
+  "caption": "Your team just dumped the puck in. Their D is picking it up behind the net on the {side} side and their forwards are curling back to help. Nobody on your line has a forecheck role yet.",
+  "layout": {
+    "players": [
+      { "id": "old", "x": { "m": 74.5 }, "y": 194, "h": { "m": 270 } },
+      { "id": "ord", "x": { "m": 22.5 }, "y": 178 },
+      { "id": "og", "x": 42.5, "y": 187 },
+      { "id": "oc", "x": 42.5, "y": 150, "h": 180 },
+      { "id": "olw", "x": { "m": 67.5 }, "y": 140, "h": 180 },
+      { "id": "orw", "x": { "m": 14.5 }, "y": 135, "h": 180 },
+      { "id": "lw", "x": { "m": 16.5 }, "y": 140, "h": 0 },
+      { "id": "rd", "x": 62, "y": 120 },
+      { "id": "ld", "x": 24, "y": 120 },
+      { "id": "g", "x": 42.5, "y": 13 }
+    ],
+    "puck": "old"
+  },
+  "variants": [
+    {
+      "id": "center-first",
+      "players": [
+        { "id": "c", "x": { "m": 50.5 }, "y": 162, "h": 0 },
+        { "id": "rw", "x": { "m": 64.5 }, "y": 142, "h": 0 }
+      ]
+    },
+    {
+      "id": "you-first",
+      "players": [
+        { "id": "c", "x": { "m": 36.5 }, "y": 148, "h": 0 },
+        { "id": "rw", "x": { "m": 64.5 }, "y": 168, "h": 0 }
+      ]
+    }
+  ],
+  "arrival": { "to": "old" },
+  "questions": [
+    {
+      "id": "dump-in-forecheck-role-center-first",
+      "type": "choice",
+      "prompt": "What do you do?",
+      "when": { "variant": "center-first" },
+      "options": [
+        {
+          "text": "Go hard at their D behind the net. I am F1.",
+          "grade": 0,
+          "feedback": "Your center is already there. Two forwards on the carrier leaves nobody on the outlet, and the far wing is now both F2 and F3.",
+          "plan": {
+            "label": "Angle the carrier",
+            "seconds": 3,
+            "moves": [
+              ["rw", {"m": 72.5}, 190],
+              ["c", {"m": 60.5}, 168],
+              ["lw", {"m": 28.5}, 150],
+              ["old", {"m": 78.5}, 182],
+              ["olw", {"m": 62.5}, 160]
+            ],
+            "puck": { "to": "c", "at": 0.85 }
+          }
+        },
+        {
+          "text": "Read who is first. My center is, so I take F2: close on the strong-side wall where the D wants to pass.",
+          "grade": 2,
+          "feedback": "Right. F2 reads where F1 forces the puck and takes the outlet. Here that is the wall on your side, so get there before the pass does.",
+          "plan": {
+            "label": "Take the strong-side wall",
+            "seconds": 3,
+            "moves": [
+              ["rw", {"m": 78.5}, 165],
+              ["c", {"m": 70.5}, 190],
+              ["lw", {"m": 30.5}, 150],
+              ["old", {"m": 76.5}, 186],
+              ["olw", {"m": 64.5}, 162]
+            ],
+            "puck": { "to": "rw", "at": 0.8 }
+          }
+        },
+        {
+          "text": "Stay high at the top of the circle as F3 so we are not caught.",
+          "grade": 1,
+          "feedback": "Safe but passive. F3 is the job of the forward furthest away, and that is your left wing. Second-closest means F2, and F2 has to move."
+        },
+        {
+          "text": "Drive to the net front for a rebound.",
+          "grade": 0,
+          "feedback": "Nobody on your team has the puck. A body at the net front before possession is a body doing nothing while their D breaks out."
+        }
+      ]
+    },
+    {
+      "id": "dump-in-forecheck-role-you-first",
+      "type": "choice",
+      "prompt": "What do you do?",
+      "when": { "variant": "you-first" },
+      "options": [
+        {
+          "text": "Go hard at their D behind the net. I am F1.",
+          "grade": 2,
+          "feedback": "Yes. You are closest, so you are F1 by arrival. Angle him toward the boards, take away his time, and let your center take F2.",
+          "plan": {
+            "label": "Angle the carrier",
+            "seconds": 3,
+            "moves": [
+              ["rw", {"m": 72.5}, 190],
+              ["c", {"m": 60.5}, 168],
+              ["lw", {"m": 28.5}, 150],
+              ["old", {"m": 78.5}, 182],
+              ["olw", {"m": 62.5}, 160]
+            ],
+            "puck": { "to": "c", "at": 0.85 }
+          }
+        },
+        {
+          "text": "Read who is first. My center is, so I take F2: close on the strong-side wall where the D wants to pass.",
+          "grade": 1,
+          "feedback": "Reasonable thinking, but look again: you are the closest one, not your center. Hesitating gives their D a free first pass.",
+          "plan": {
+            "label": "Take the strong-side wall",
+            "seconds": 3,
+            "moves": [
+              ["rw", {"m": 78.5}, 165],
+              ["c", {"m": 70.5}, 190],
+              ["lw", {"m": 30.5}, 150],
+              ["old", {"m": 76.5}, 186],
+              ["olw", {"m": 64.5}, 162]
+            ],
+            "puck": { "to": "rw", "at": 0.8 }
+          }
+        },
+        {
+          "text": "Stay high at the top of the circle as F3 so we are not caught.",
+          "grade": 1,
+          "feedback": "Safe but passive. F3 is the job of the forward furthest away, and that is your left wing. Second-closest means F2, and F2 has to move."
+        },
+        {
+          "text": "Drive to the net front for a rebound.",
+          "grade": 0,
+          "feedback": "Nobody on your team has the puck. A body at the net front before possession is a body doing nothing while their D breaks out."
+        }
+      ]
+    },
+    {
+      "id": "dump-in-forecheck-order-center-first",
+      "type": "order",
+      "prompt": "Tap your three forwards in the order they take F1, F2 and F3.",
+      "weight": 2,
+      "when": { "variant": "center-first" },
+      "answer": ["$F1", "$F2", "$F3"],
+      "fb": {
+        "right": "Right. Arrival order, nothing else: closest is F1 on the carrier, next is F2 on the outlet, furthest stays high as F3.",
+        "f1": "You found F1, which is the hard one. F2 is whoever is next closest, not whoever is on the puck side.",
+        "wrong": "Start from the puck. Who gets to the carrier first? That player is F1 regardless of position. Then count outward."
+      },
+      "plan": {
+        "label": "Take the strong-side wall",
+        "seconds": 3,
+        "moves": [
+          ["rw", {"m": 78.5}, 165],
+          ["c", {"m": 70.5}, 190],
+          ["lw", {"m": 30.5}, 150],
+          ["old", {"m": 76.5}, 186],
+          ["olw", {"m": 64.5}, 162]
+        ],
+        "puck": { "to": "rw", "at": 0.8 }
+      }
+    },
+    {
+      "id": "dump-in-forecheck-order-you-first",
+      "type": "order",
+      "prompt": "Tap your three forwards in the order they take F1, F2 and F3.",
+      "weight": 2,
+      "when": { "variant": "you-first" },
+      "answer": ["$F1", "$F2", "$F3"],
+      "fb": {
+        "right": "Right. Arrival order, nothing else: closest is F1 on the carrier, next is F2 on the outlet, furthest stays high as F3.",
+        "f1": "You found F1, which is the hard one. F2 is whoever is next closest, not whoever is on the puck side.",
+        "wrong": "Start from the puck. Who gets to the carrier first? That player is F1 regardless of position. Then count outward."
+      },
+      "plan": {
+        "label": "Angle the carrier",
+        "seconds": 3,
+        "moves": [
+          ["rw", {"m": 72.5}, 190],
+          ["c", {"m": 60.5}, 168],
+          ["lw", {"m": 28.5}, 150],
+          ["old", {"m": 78.5}, 182],
+          ["olw", {"m": 62.5}, 160]
+        ],
+        "puck": { "to": "c", "at": 0.85 }
+      }
+    }
+  ]
+}

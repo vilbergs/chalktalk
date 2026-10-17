@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "id": "rush-against",
+  "name": "Rush against",
+  "status": "published",
+  "tags": ["neutral-zone", "backcheck", "coverage"],
+  "caption": "Turnover at their blue line. They're coming back 3-on-2 against your D, and you are the first forward back, a stride behind their trailer on the {side} side.",
+  "layout": {
+    "players": [
+      { "id": "old", "x": { "m": 50.5 }, "y": 120, "h": 180 },
+      { "id": "olw", "x": { "m": 72.5 }, "y": 112, "h": 180 },
+      { "id": "oc", "x": { "m": 22.5 }, "y": 108, "h": 180 },
+      { "id": "orw", "x": { "m": 12.5 }, "y": 135 },
+      { "id": "ord", "x": { "m": 62.5 }, "y": 150 },
+      { "id": "og", "x": 42.5, "y": 187 },
+      { "id": "rd", "x": 55, "y": 80, "h": 180 },
+      { "id": "ld", "x": 30, "y": 82, "h": 180 },
+      { "id": "g", "x": 42.5, "y": 13 },
+      { "id": "rw", "x": { "m": 66.5 }, "y": 118, "h": 180 },
+      { "id": "c", "x": { "m": 36.5 }, "y": 128, "h": 180 },
+      { "id": "lw", "x": { "m": 16.5 }, "y": 140, "h": 180 }
+    ],
+    "puck": "old"
+  },
+  "questions": [
+    {
+      "id": "rush-against-choice",
+      "type": "choice",
+      "prompt": "They are coming 3-on-2. What do you do?",
+      "options": [
+        {
+          "text": "Skate hard and pick up their trailer on my side, staying between him and our net, so my D can play it as a 2-on-2.",
+          "grade": 2,
+          "feedback": "Yes. The first forward back takes the third attacker, always. Your D handle the carrier and the far man; your job is the late option they cannot cover.",
+          "plan": {
+            "label": "Take the trailer",
+            "seconds": 3,
+            "moves": [
+              ["rw", {"m": 64.5}, 88],
+              ["olw", {"m": 68.5}, 90],
+              ["old", {"m": 46.5}, 92],
+              ["oc", {"m": 24.5}, 86],
+              ["rd", 52, 66],
+              ["ld", 32, 68],
+              ["c", {"m": 36.5}, 100]
+            ],
+            "puck": { "to": "old", "at": 1 }
+          }
+        },
+        {
+          "text": "Chase the puck carrier and try to lift his stick from behind.",
+          "grade": 0,
+          "feedback": "Your D already has him. A stick lift from behind is a low-percentage play and a penalty half the time, and the trailer walks in alone."
+        },
+        {
+          "text": "Go straight to our net front to block the shot.",
+          "grade": 1,
+          "feedback": "Too deep too early. The trailer gets a free lane into the slot while you are standing at the crease. Take the man first; the net comes later."
+        },
+        {
+          "text": "Stay in the neutral zone so we can counter if the goalie saves it.",
+          "grade": 0,
+          "feedback": "That is a 3-on-2 you chose not to help with. Backcheck first; the counter comes from winning the puck."
+        }
+      ]
+    },
+    {
+      "id": "rush-against-pick",
+      "type": "pick",
+      "prompt": "Tap the attacker you take.",
+      "weight": 2,
+      "answer": "olw",
+      "partial": ["oc"],
+      "fb": {
+        "right": "The trailer. Your D have the carrier and the far winger; the late man is the one nobody else can reach.",
+        "partial": "That is the far winger, and your weak-side D already has him. The trailer behind the play is the uncovered man.",
+        "wrong": "Not the carrier; your D is on him. The first forward back always takes the third attacker, the one trailing the rush."
+      },
+      "plan": {
+        "label": "Take the trailer",
+        "seconds": 3,
+        "moves": [
+          ["rw", {"m": 64.5}, 88],
+          ["olw", {"m": 68.5}, 90],
+          ["old", {"m": 46.5}, 92],
+          ["oc", {"m": 24.5}, 86],
+          ["rd", 52, 66],
+          ["ld", 32, 68],
+          ["c", {"m": 36.5}, 100]
+        ],
+        "puck": { "to": "old", "at": 1 }
+      }
+    }
+  ]
+}

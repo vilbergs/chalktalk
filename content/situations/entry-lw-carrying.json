@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "id": "entry-lw-carrying",
+  "name": "Zone entry, LW carrying",
+  "status": "published",
+  "tags": ["neutral-zone", "zone-entry", "width"],
+  "caption": "Your LW is carrying the puck up the left boards with speed and is about to cross their blue line. You are on the right side, skating with him and a few feet short of the line. Both their D are backing in and their forwards are chasing.",
+  "layout": {
+    "players": [
+      { "id": "lw", "x": 12, "y": 118, "h": 0 },
+      { "id": "c", "x": 42, "y": 112, "h": 0 },
+      { "id": "rw", "x": 70, "y": 112, "h": 0 },
+      { "id": "ld", "x": 30, "y": 88, "h": 0 },
+      { "id": "rd", "x": 58, "y": 86, "h": 0 },
+      { "id": "g", "x": 42.5, "y": 13 },
+      { "id": "ord", "x": 26, "y": 140, "h": 180 },
+      { "id": "old", "x": 56, "y": 142, "h": 180 },
+      { "id": "orw", "x": 18, "y": 102, "h": 0 },
+      { "id": "oc", "x": 40, "y": 98, "h": 0 },
+      { "id": "olw", "x": 72, "y": 96, "h": 0 },
+      { "id": "og", "x": 42.5, "y": 187 }
+    ],
+    "puck": "lw"
+  },
+  "questions": [
+    {
+      "id": "entry-lw-carrying-choice",
+      "type": "choice",
+      "prompt": "What do you do?",
+      "options": [
+        {
+          "text": "Drive wide down the right with speed, staying onside, to stretch their D and open the middle for the center.",
+          "grade": 2,
+          "feedback": "Right. Width is your job on the entry. Their D have to respect you, which gives the center the middle lane and your LW room to cut in.",
+          "plan": {
+            "label": "Drive wide",
+            "seconds": 3,
+            "moves": [
+              ["rw", 76, 150],
+              ["lw", 14, 150],
+              ["c", 40, 142],
+              ["ord", 26, 162],
+              ["old", 56, 164],
+              ["olw", 70, 118],
+              ["oc", 40, 120]
+            ],
+            "puck": { "to": "lw", "at": 1 }
+          }
+        },
+        {
+          "text": "Cut into the middle lane early to be the pass option.",
+          "grade": 1,
+          "feedback": "The center is driving the middle. Two in the middle and nobody wide lets their D squeeze the whole entry into one lane."
+        },
+        {
+          "text": "Slow down at the blue line to make sure I stay onside.",
+          "grade": 1,
+          "feedback": "Staying onside matters, but the puck is on the far wall, so you have time. Slowing to a stop kills the entry; adjust your line, not your speed."
+        },
+        {
+          "text": "Stop at the blue line and wait to see what happens.",
+          "grade": 0,
+          "feedback": "Then their right D has nobody to worry about and can slide over to help on your LW. Keep skating."
+        }
+      ]
+    },
+    {
+      "id": "entry-lw-carrying-spot",
+      "type": "spot",
+      "prompt": "Tap where you want to be two seconds from now.",
+      "target": { "x": 76, "y": 150 },
+      "label": "Wide lane",
+      "r1": 10,
+      "r2": 22,
+      "fb": {
+        "right": "Wide and deep, just inside the line. Their right D has to honour you and the middle opens for your center.",
+        "close": "Right lane. Keep driving: deeper and wider pulls their D with you; stopping short lets him cheat to the middle.",
+        "wrong": "The center has the middle. Your lane is the outside, and you want to be past their D, not beside him."
+      },
+      "plan": {
+        "label": "Drive wide",
+        "seconds": 3,
+        "moves": [
+          ["rw", 76, 150],
+          ["lw", 14, 150],
+          ["c", 40, 142],
+          ["ord", 26, 162],
+          ["old", 56, 164],
+          ["olw", 70, 118],
+          ["oc", 40, 120]
+        ],
+        "puck": { "to": "lw", "at": 1 }
+      }
+    }
+  ]
+}

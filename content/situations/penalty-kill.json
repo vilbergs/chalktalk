@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "id": "penalty-kill",
+  "name": "Penalty kill",
+  "status": "published",
+  "tags": ["special-teams", "penalty-kill", "box"],
+  "caption": "You are killing a penalty, 4 on 5. Their D has the puck at the {side} point and their forwards are set up on the half-walls and at the net front.",
+  "layout": {
+    "players": [
+      { "id": "old", "x": { "m": 60.5 }, "y": 128, "fa": { "m": 210 } },
+      { "id": "ord", "x": { "m": 24.5 }, "y": 126 },
+      { "id": "olw", "x": { "m": 76.5 }, "y": 164 },
+      { "id": "orw", "x": { "m": 8.5 }, "y": 160 },
+      { "id": "oc", "x": 42.5, "y": 180 },
+      { "id": "og", "x": 42.5, "y": 187 },
+      { "id": "rw", "x": { "m": 54.5 }, "y": 150 },
+      { "id": "c", "x": { "m": 30.5 }, "y": 150 },
+      { "id": "rd", "x": { "m": 54.5 }, "y": 172 },
+      { "id": "ld", "x": { "m": 30.5 }, "y": 172 },
+      { "id": "g", "x": 42.5, "y": 13 }
+    ],
+    "puck": "old",
+    "off": ["lw"]
+  },
+  "questions": [
+    {
+      "id": "penalty-kill-strong-spot",
+      "type": "spot",
+      "prompt": "You are the forward on the right of the box. Tap where you should be.",
+      "when": { "side": "right" },
+      "target": { "x": { "m": 58.5 }, "y": 140 },
+      "label": "Pressure the point",
+      "r1": 10,
+      "r2": 22,
+      "fb": {
+        "right": "Top of the box on the puck side: close enough to pressure the point man and take away his shot, with your stick in the seam to the half-wall.",
+        "close": "Close. A few feet higher and toward the puck; a passive box gives their point man all day.",
+        "wrong": "On the kill you stay in the box: you are the top forward on the puck side. Get up toward the point man and take his shooting lane, not down to the net."
+      },
+      "plan": {
+        "label": "Top of the box, puck side",
+        "seconds": 2.5,
+        "moves": [
+          ["rw", {"m": 58.5}, 140],
+          ["old", {"m": 62.5}, 126],
+          ["c", {"m": 32.5}, 146]
+        ],
+        "puck": { "to": "old", "at": 1 }
+      }
+    },
+    {
+      "id": "penalty-kill-weak-spot",
+      "type": "spot",
+      "prompt": "You are the forward on the right of the box. Tap where you should be.",
+      "when": { "side": "left" },
+      "target": { "x": { "m": 38.5 }, "y": 146 },
+      "label": "Hold the box",
+      "r1": 10,
+      "r2": 22,
+      "fb": {
+        "right": "Right. On the weak side you hold your corner of the box, cheating toward the slot, so the cross-ice pass to the back door is not a one-timer.",
+        "close": "Nearly. Stay a touch more central; your job on the weak side is the seam through the slot, not the far point.",
+        "wrong": "The puck is on the far point. You hold your corner of the box and cheat to the middle, so the seam pass across cannot become a one-timer."
+      },
+      "plan": {
+        "label": "Top of the box, slot side",
+        "seconds": 2.5,
+        "moves": [
+          ["rw", {"m": 38.5}, 146],
+          ["old", {"m": 62.5}, 126],
+          ["c", {"m": 32.5}, 146]
+        ],
+        "puck": { "to": "old", "at": 1 }
+      }
+    }
+  ]
+}

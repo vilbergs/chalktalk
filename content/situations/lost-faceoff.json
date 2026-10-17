@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "id": "lost-faceoff",
+  "name": "Lost faceoff in your zone",
+  "status": "published",
+  "tags": ["defensive-zone", "faceoff", "coverage"],
+  "caption": "Faceoff in your zone on the {side} dot. Your center loses it cleanly back to their D at the {side} point. You lined up on the wing.",
+  "layout": {
+    "players": [
+      { "id": "c", "x": { "m": 64.5 }, "y": 28 },
+      { "id": "oc", "x": { "m": 64.5 }, "y": 32 },
+      { "id": "rw", "x": { "m": 72.5 }, "y": 28 },
+      { "id": "lw", "x": { "m": 56.5 }, "y": 28 },
+      { "id": "olw", "x": { "m": 72.5 }, "y": 34 },
+      { "id": "orw", "x": { "m": 56.5 }, "y": 34 },
+      { "id": "rd", "x": { "m": 72.5 }, "y": 16 },
+      { "id": "ld", "x": { "m": 50.5 }, "y": 18 },
+      { "id": "g", "x": 42.5, "y": 13 },
+      { "id": "old", "x": { "m": 60.5 }, "y": 62, "fa": { "m": 200 } },
+      { "id": "ord", "x": { "m": 24.5 }, "y": 60 },
+      { "id": "og", "x": 42.5, "y": 187 }
+    ],
+    "puck": "old"
+  },
+  "questions": [
+    {
+      "id": "lost-faceoff-strong-spot",
+      "type": "spot",
+      "prompt": "The draw is lost back to their D. Tap where you go.",
+      "when": { "side": "right" },
+      "target": { "x": { "m": 58.5 }, "y": 50 },
+      "label": "On the point man",
+      "r1": 10,
+      "r2": 22,
+      "fb": {
+        "right": "Straight out to the D on your side, the moment the draw is lost. That shot is the whole reason they want the puck back there.",
+        "close": "Right direction, a few feet short. Get all the way out so his shooting lane is blocked, not just contested.",
+        "wrong": "When the draw is lost in your zone, the wingers go to the points immediately. The D with the puck is on your side; he is yours."
+      },
+      "plan": {
+        "label": "Out to the point",
+        "seconds": 3,
+        "moves": [
+          ["rw", {"m": 58.5}, 50],
+          ["c", {"m": 50.5}, 30],
+          ["lw", {"m": 40.5}, 40]
+        ],
+        "puck": { "to": "old", "at": 1 }
+      }
+    },
+    {
+      "id": "lost-faceoff-weak-spot",
+      "type": "spot",
+      "prompt": "The draw is lost back to their D. Tap where you go.",
+      "when": { "side": "left" },
+      "target": { "x": { "m": 52.5 }, "y": 42 },
+      "label": "Sagged, slot side",
+      "r1": 10,
+      "r2": 22,
+      "fb": {
+        "right": "Good. The puck went to the far point, so you sag toward the slot and keep an eye on the near D rather than racing to the puck side.",
+        "close": "Nearly. Hold the middle a bit more; the slot pass is the danger, and your point man is still two strides away.",
+        "wrong": "The puck went to the D on the far side. That is your other winger’s man. You sag into the middle, between the slot and the D on your side."
+      },
+      "plan": {
+        "label": "Slot side, ready for the far point",
+        "seconds": 3,
+        "moves": [
+          ["rw", {"m": 52.5}, 42],
+          ["c", {"m": 50.5}, 30],
+          ["lw", {"m": 40.5}, 40]
+        ],
+        "puck": { "to": "old", "at": 1 }
+      }
+    }
+  ]
+}

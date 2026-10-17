@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "id": "breakout-who-is-open",
+  "name": "Breakout: who is open",
+  "status": "published",
+  "tags": ["defensive-zone", "breakout", "reading"],
+  "caption": "Your D has the puck behind the net with their center coming at him. One of your forwards is covered, two are not. He has to move it now.",
+  "layout": {
+    "players": [
+      { "id": "rd", "x": { "m": 48.5 }, "y": 8, "h": { "m": 60 } },
+      { "id": "ld", "x": { "m": 26.5 }, "y": 22 },
+      { "id": "g", "x": 42.5, "y": 13 },
+      { "id": "c", "x": 42.5, "y": 36, "h": 0 },
+      { "id": "rw", "x": 76, "y": 40 },
+      { "id": "lw", "x": 9, "y": 40 },
+      { "id": "og", "x": 42.5, "y": 187 },
+      { "id": "oc", "x": { "m": 44.5 }, "y": 22, "h": 180 },
+      { "id": "old", "x": 60, "y": 80 },
+      { "id": "ord", "x": 25, "y": 80 }
+    ],
+    "puck": "rd"
+  },
+  "variants": [
+    {
+      "id": "rw-covered",
+      "players": [
+        { "id": "olw", "x": 70, "y": 44 },
+        { "id": "orw", "x": { "m": 16.5 }, "y": 62 }
+      ]
+    },
+    {
+      "id": "c-covered",
+      "players": [
+        { "id": "olw", "x": { "m": 68.5 }, "y": 62 },
+        { "id": "orw", "x": 40, "y": 46 }
+      ]
+    },
+    {
+      "id": "lw-covered",
+      "players": [
+        { "id": "olw", "x": { "m": 68.5 }, "y": 62 },
+        { "id": "orw", "x": 15, "y": 44 }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "breakout-who-is-open-rw-covered",
+      "type": "pick",
+      "prompt": "Your D is about to pass. Tap the teammate who is open.",
+      "when": { "variant": "rw-covered" },
+      "answer": "c",
+      "partial": ["lw"],
+      "fb": {
+        "right": "Yes, your C is the free man. Their forechecker took away your wall, so the puck has to go the other way.",
+        "partial": "Also open, but your C is the better outlet: that pass is shorter and away from the pressure.",
+        "wrong": "your RW is covered: look at the opponent standing right on him. The pass has to go to someone with ice around him."
+      },
+      "plan": {
+        "label": "Pass to the open man",
+        "seconds": 3,
+        "moves": [
+          ["c", 42.5, 42],
+          ["rd", {"m": 54.5}, 18],
+          ["oc", {"m": 48.5}, 14]
+        ],
+        "puck": { "to": "c", "at": 0.6 }
+      }
+    },
+    {
+      "id": "breakout-who-is-open-c-covered",
+      "type": "pick",
+      "prompt": "Your D is about to pass. Tap the teammate who is open.",
+      "when": { "variant": "c-covered" },
+      "answer": "rw",
+      "partial": ["lw"],
+      "fb": {
+        "right": "Yes, your RW is the free man. That is you: stopped on the wall, forehand ready.",
+        "partial": "Also open, but your RW is the better outlet: the wall is the safe side and the puck comes to your forehand.",
+        "wrong": "your C is covered: look at the opponent standing right on him. The pass has to go to someone with ice around him."
+      },
+      "plan": {
+        "label": "Pass to the open man",
+        "seconds": 3,
+        "moves": [
+          ["rw", 76, 46],
+          ["rd", {"m": 54.5}, 18],
+          ["oc", {"m": 48.5}, 14]
+        ],
+        "puck": { "to": "rw", "at": 0.6 }
+      }
+    },
+    {
+      "id": "breakout-who-is-open-lw-covered",
+      "type": "pick",
+      "prompt": "Your D is about to pass. Tap the teammate who is open.",
+      "when": { "variant": "lw-covered" },
+      "answer": "rw",
+      "partial": ["c"],
+      "fb": {
+        "right": "Yes, your RW is the free man. That is you: stopped on the wall, forehand ready.",
+        "partial": "Also open, but your RW is the better outlet: the wall is the safe side and the puck comes to your forehand.",
+        "wrong": "your LW is covered: look at the opponent standing right on him. The pass has to go to someone with ice around him."
+      },
+      "plan": {
+        "label": "Pass to the open man",
+        "seconds": 3,
+        "moves": [
+          ["rw", 76, 46],
+          ["rd", {"m": 54.5}, 18],
+          ["oc", {"m": 48.5}, 14]
+        ],
+        "puck": { "to": "rw", "at": 0.6 }
+      }
+    }
+  ]
+}

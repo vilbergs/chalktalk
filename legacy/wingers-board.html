@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Winger's board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2f5;--card:#ffffff;--ink:#17222b;--muted:#5d6b76;--line:#d5dce2;--teal:#1D9E75;--teal-dk:#085041;--coral:#D85A30;--coral-dk:#712B13;--sel:#EF9F27;--accent:#185FA5;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111a21;--card:#1a252e;--ink:#e8edf1;--muted:#9aa8b3;--line:#2d3a46}}
+:root[data-theme="dark"]{--bg:#111a21;--card:#1a252e;--ink:#e8edf1;--muted:#9aa8b3;--line:#2d3a46}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Barlow,system-ui,sans-serif;font-size:16px;line-height:1.5}
+main{max-width:460px;margin:0 auto;padding:12px 12px 48px}
+h1{font-family:"Barlow Condensed",Barlow,sans-serif;font-weight:600;font-size:34px;line-height:1;margin:8px 0 2px;letter-spacing:.3px}
+.sub{color:var(--muted);margin:0 0 12px;font-size:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+.rinkwrap{padding:6px}
+svg#rink{display:block;width:100%;height:auto;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+#players g,#players g *{touch-action:none}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button{font:inherit;font-weight:500;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:9px 13px;cursor:pointer;min-height:40px}
+button:active{transform:scale(.98)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.ghost{background:transparent}
+button[disabled]{opacity:.5;cursor:default}
+button.on{border-color:var(--sel);box-shadow:inset 0 0 0 1px var(--sel)}
+.panel{margin-top:10px}
+.panel .who{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.chip{display:inline-block;width:14px;height:14px;border-radius:50%}
+.chip.t{background:var(--teal)}.chip.c{background:var(--coral)}
+.hint{color:var(--muted);font-size:14px;margin:6px 0 0}
+.presets{margin-top:10px}
+.presets button{font-size:14px;padding:7px 11px;min-height:36px}
+.ask{margin-top:12px}
+.ask .row{justify-content:space-between}
+.answer{margin-top:12px;white-space:normal}
+.answer h2{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:600;margin:0 0 6px}
+.answer dl{margin:0;display:grid;grid-template-columns:88px 1fr;gap:6px 10px;font-size:15px}
+.answer dt{color:var(--muted);font-weight:500}
+.answer dd{margin:0}
+.thinking{color:var(--muted);font-style:italic}
+.err{color:#A32D2D}
+.hidden{display:none}
+.tabs{display:flex;gap:6px;margin:0 0 10px;padding:4px;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.tabs button{flex:1;border:none;background:transparent;border-radius:9px;min-height:38px}
+.tabs button.on{background:var(--accent);color:#fff;box-shadow:none}
+.quiz{margin-bottom:10px}
+.qhead{display:flex;justify-content:space-between;align-items:baseline;font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:600}
+.score{font-size:15px;color:var(--muted);font-family:Barlow,sans-serif;font-weight:500}
+.caption{margin:4px 0 8px;font-size:16px}
+.qprompt{margin:0 0 8px;font-weight:500}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;padding:10px 12px;min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--bg);line-height:1.35;font-weight:400}
+.opt.correct{border-color:#1D9E75;box-shadow:inset 0 0 0 1px #1D9E75}
+.opt.wrong{border-color:#D85A30;box-shadow:inset 0 0 0 1px #D85A30}
+.opt.partial{border-color:#EF9F27;box-shadow:inset 0 0 0 1px #EF9F27}
+.opt[disabled]{opacity:1;cursor:default}
+.opt[disabled]:not(.correct):not(.wrong):not(.partial){opacity:.55}
+.tapcue{margin:4px 0 0;color:var(--accent);font-weight:500;display:flex;align-items:center;gap:8px}
+.tapcue i{width:10px;height:10px;border-radius:50%;background:var(--accent);display:inline-block}
+@media (prefers-reduced-motion:no-preference){.tapcue i{animation:pulse 1.2s ease-in-out infinite}}
+.coachsays{margin:10px 0 0;padding:10px 12px;border-left:3px solid var(--accent);background:var(--bg);border-radius:0 10px 10px 0;font-size:15px}
+textarea{width:100%;font:inherit;font-size:16px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);resize:vertical}
+textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+.answer{margin-top:12px}
+.answer.quizmode{border-top:1px solid var(--line);padding-top:12px}
+.play{margin-top:12px}
+.slab{display:flex;align-items:center;gap:12px;margin-top:10px;font-size:14px;color:var(--muted)}
+.slab span{min-width:84px}
+.slab b{color:var(--ink);font-weight:500}
+.slab input{flex:1;accent-color:var(--accent)}
+@media (prefers-reduced-motion:no-preference){.pulse{animation:pulse 1.2s ease-in-out infinite}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+main{padding-bottom:56vh}
+#sheet{position:fixed;left:0;right:0;bottom:0;z-index:5;max-width:460px;margin:0 auto;max-height:52vh;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-bottom:none;border-radius:18px 18px 0 0;box-shadow:0 -6px 24px rgba(0,0,0,.08);padding-bottom:env(safe-area-inset-bottom,0px);transition:max-height .25s ease}
+#sheet.collapsed{max-height:44px}
+#sheet.collapsed .sheet-body{overflow:hidden}
+.handle{width:100%;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0 4px;min-height:44px;font-size:12px;color:var(--muted);border-radius:18px 18px 0 0}
+.pill{width:40px;height:5px;border-radius:3px;background:var(--line)}
+.sheet-body{overflow-y:auto;-webkit-overflow-scrolling:touch}
+#sheet .card{border:none;border-radius:0;border-top:1px solid var(--line);padding:10px 14px;margin:0}
+#sheet .presets{padding:8px 14px;border-top:1px solid var(--line);margin:0}
+#sheet .answer{padding:10px 14px;margin:0;border-top:1px solid var(--line)}
+#sheet .answer.quizmode{border-top:1px solid var(--line);padding-top:10px}
+#sheet .quiz{margin:0}
+</style>
+</head>
+<body>
+<main>
+<h1>Winger's board</h1>
+<p class="sub" id="subline">Drag players into place, give someone the puck, set skating directions, then ask what the right wing should do.</p>
+<div class="tabs" role="tablist">
+  <button id="tabBoard" class="on" role="tab">Free board</button>
+  <button id="tabQuiz" role="tab">Quiz me</button>
+</div>
+
+
+<div class="card rinkwrap">
+<svg id="rink" viewBox="0 0 850 2000" xmlns="http://www.w3.org/2000/svg" aria-label="Ice rink with movable players">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1L8 5L1 9" fill="none" stroke="context-stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker>
+    <marker id="ah2" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1L8 5L1 9" fill="none" stroke="#185FA5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  </defs>
+  <rect x="0" y="0" width="850" height="2000" rx="280" fill="#f7fbff" stroke="#9fb3c4" stroke-width="6"/>
+  <g stroke-width="4">
+    <line x1="6" y1="110" x2="844" y2="110" stroke="#d94a4a"/>
+    <line x1="6" y1="1890" x2="844" y2="1890" stroke="#d94a4a"/>
+    <rect x="3" y="740" width="844" height="20" fill="#3b7dd8" stroke="none"/>
+    <rect x="3" y="1240" width="844" height="20" fill="#3b7dd8" stroke="none"/>
+    <rect x="3" y="992" width="844" height="16" fill="#d94a4a" stroke="none"/>
+    <circle cx="425" cy="1000" r="150" fill="none" stroke="#3b7dd8"/>
+    <circle cx="425" cy="1000" r="8" fill="#3b7dd8" stroke="none"/>
+    <g fill="none" stroke="#d94a4a">
+      <circle cx="205" cy="310" r="150"/><circle cx="645" cy="310" r="150"/>
+      <circle cx="205" cy="1690" r="150"/><circle cx="645" cy="1690" r="150"/>
+    </g>
+    <g fill="#d94a4a" stroke="none">
+      <circle cx="205" cy="310" r="8"/><circle cx="645" cy="310" r="8"/>
+      <circle cx="205" cy="1690" r="8"/><circle cx="645" cy="1690" r="8"/>
+      <circle cx="205" cy="800" r="8"/><circle cx="645" cy="800" r="8"/>
+      <circle cx="205" cy="1200" r="8"/><circle cx="645" cy="1200" r="8"/>
+    </g>
+    <path d="M365 110 A60 60 0 0 0 485 110" fill="#bcd8f5" stroke="#d94a4a"/>
+    <path d="M365 1890 A60 60 0 0 1 485 1890" fill="#bcd8f5" stroke="#d94a4a"/>
+    <rect x="395" y="70" width="60" height="40" fill="#fff" stroke="#d94a4a"/>
+    <rect x="395" y="1890" width="60" height="40" fill="#fff" stroke="#d94a4a"/>
+  </g>
+  <text x="425" y="48" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="32" fill="#9fb3c4">Their net</text>
+  <text x="425" y="1972" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="32" fill="#9fb3c4">Your net</text>
+  <g id="reco"></g>
+  <g id="qmarks"></g>
+  <g id="players"></g>
+</svg>
+</div>
+
+
+
+
+</main>
+<div id="sheet">
+  <button class="handle" id="handle" aria-label="Collapse or expand panel"><span class="pill"></span><span id="handleText">Hide panel</span></button>
+  <div class="sheet-body" id="sheetBody">
+<div class="card quiz hidden" id="quiz">
+  <div class="qhead"><span id="qTitle">Situation</span><span class="score" id="qScore"></span></div>
+  <p class="caption" id="qCaption"></p>
+  <p class="qprompt" id="qPrompt"></p>
+  <div id="qBody"></div>
+  <div class="row" style="justify-content:space-between;margin-top:10px">
+    <button id="qNew" class="ghost">New situation</button>
+    <button id="qCoach" class="ghost hidden">Ask the coach to say more</button>
+  </div>
+  <p class="hint" id="qHint"></p>
+  <p class="coachsays hidden" id="qCoachText"></p>
+</div>
+<div class="card panel" id="panel">
+  <div class="who"><span class="chip t" id="whochip"></span><span id="whoname">Tap a player</span></div>
+  <div class="row">
+    <button id="puckBtn">Give the puck</button>
+    <button id="stopBtn">Standing still</button>
+    <button id="selfBtn" class="ghost">This is me</button>
+  </div>
+  <p class="hint" id="hint">Drag a player to move. Drag the orange tip to turn them; the white nose shows which way they face. Toggle Skating to make them move that way.</p>
+</div>
+<div class="presets row">
+  <button data-preset="breakout">Breakout</button>
+  <button data-preset="corner">D-zone corner</button>
+  <button data-preset="forecheck">Forecheck</button>
+  <button data-preset="ozone">O-zone cycle</button>
+  <button data-preset="reset" class="ghost">Reset</button>
+</div>
+<div class="card ask" id="askCard">
+  <div class="row">
+    <button id="askBtn" class="primary">What should I do?</button>
+    <button id="cancelBtn" class="ghost hidden">Stop</button>
+  </div>
+  <p class="hint" id="askHint"></p>
+</div>
+  <div class="answer hidden" id="answer">
+    <h2 id="aRead"></h2>
+    <dl>
+      <dt id="lMove">Go to</dt><dd id="aMove"></dd>
+      <dt id="lWhy">Why</dt><dd id="aWhy"></dd>
+      <dt id="lStick">Stick and body</dt><dd id="aStick"></dd>
+      <dt id="lWatch">Watch for</dt><dd id="aWatch"></dd>
+    </dl>
+  </div>
+<div class="card play hidden" id="play">
+  <div class="row" style="justify-content:space-between">
+    <div class="row">
+      <button id="playBtn" class="primary">Play it out</button>
+      <button id="rewindBtn" class="ghost">Rewind</button>
+    </div>
+    <button id="commitBtn" class="ghost">Keep end positions</button>
+  </div>
+  <label class="slab"><span>Progress</span><input type="range" id="scrub" min="0" max="1000" value="0" step="1"></label>
+  <label class="slab"><span>Speed <b id="speedOut">1×</b></span><input type="range" id="speed" min="0.25" max="2" value="1" step="0.25"></label>
+  <p class="hint" id="playHint">Plays the next few seconds as suggested: your move, plus how the others likely react.</p>
+</div>
+  </div>
+</div>
+
+
+<script>
+(function(){
+const S=10;
+const svg=document.getElementById('rink');
+const gP=document.getElementById('players');
+const gR=document.getElementById('reco');
+const R=36,HD=120;
+
+const base=()=>([
+].concat([
+ {id:'rw',team:'us',label:'RW',x:70,y:92,h:null},
+ {id:'c',team:'us',label:'C',x:42,y:95,h:null},
+ {id:'lw',team:'us',label:'LW',x:15,y:92,h:null},
+ {id:'rd',team:'us',label:'RD',x:60,y:70,h:null},
+ {id:'ld',team:'us',label:'LD',x:25,y:70,h:null},
+ {id:'g',team:'us',label:'G',x:42.5,y:13,h:null},
+ {id:'orw',team:'them',label:'W',x:15,y:108,h:null},
+ {id:'oc',team:'them',label:'C',x:42,y:105,h:null},
+ {id:'olw',team:'them',label:'W',x:70,y:108,h:null},
+ {id:'ord',team:'them',label:'D',x:25,y:130,h:null},
+ {id:'old',team:'them',label:'D',x:60,y:130,h:null},
+ {id:'og',team:'them',label:'G',x:42.5,y:187,h:null}
+].map(p=>Object.assign(p,{fa:p.team==='us'?0:180,off:false}))));
+function faceOf(p){return p.h!==null&&p.h!==undefined?p.h:(typeof p.fa==='number'?p.fa:(p.team==='us'?0:180));}
+function autoFace(){
+  let tx=null,ty=null;
+  if(state.puck){const q=f(state.puck);if(q){tx=q.x;ty=q.y;}}else if(state.loose){tx=state.loose.x;ty=state.loose.y;}
+  for(const p of state.players){
+    if(p.h!==null)continue;
+    if(p.label==='G'){p.fa=p.team==='us'?0:180;continue;}
+    if(tx===null||p.id===state.puck){continue;}
+    p.fa=Math.round((Math.atan2(tx-p.x,ty-p.y)*180/Math.PI+360)%360);
+  }
+}
+
+let state={players:base(),puck:'oc',me:'rw'};
+let sel=null;
+let reco=null;
+
+try{const s=localStorage.getItem('wb-state');if(s){const p=JSON.parse(s);if(p&&p.players)state=p;}}catch(e){}
+function save(){try{localStorage.setItem('wb-state',JSON.stringify(state));}catch(e){}}
+
+let plan=null;
+let play={t:0,speed:1,running:false,raf:null,last:0};
+const ease=u=>u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+function posOf(p){
+  if(!plan||play.t<=0)return{x:p.x,y:p.y,h:p.h,fa:faceOf(p)};
+  const m=plan.moves[p.id];
+  if(!m)return{x:p.x,y:p.y,h:p.h,fa:faceOf(p)};
+  const u=ease(Math.min(1,play.t/plan.seconds));
+  const x=p.x+(m.x-p.x)*u,y=p.y+(m.y-p.y)*u;
+  const dx=m.x-p.x,dy=m.y-p.y;
+  const h=(Math.abs(dx)+Math.abs(dy)<1)?p.h:(Math.round((Math.atan2(dx,dy)*180/Math.PI+360)%360));
+  return{x,y,h:u>=1?null:h,fa:(Math.abs(dx)+Math.abs(dy)<1)?faceOf(p):h};
+}
+function puckHolder(){
+  if(!plan||play.t<=0)return state.puck;
+  const at=plan.puck.at*plan.seconds;
+  return play.t>=at?plan.puck.to:state.puck;
+}
+const px=p=>{const q=posOf(p);return{cx:q.x*S,cy:(200-q.y)*S};};
+function render(){
+  gP.innerHTML='';
+  const holder=puckHolder();let puckSvg='';
+  for(const p0 of state.players){
+    if(p0.off)continue;
+    const p=Object.assign({},p0,posOf(p0));
+    const {cx,cy}=px(p0);
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.dataset.id=p.id;
+    const isSel=sel===p.id,isMe=state.me===p.id;
+    const fill=p.team==='us'?'#1D9E75':'#D85A30';
+    let inner='';
+    const fa=faceOf(p)*Math.PI/180;
+    if(p.h!==null){
+      const hx=cx+Math.sin(fa)*HD,hy=cy-Math.cos(fa)*HD;
+      inner+=`<line x1="${cx}" y1="${cy}" x2="${hx}" y2="${hy}" stroke="${fill}" stroke-width="6" marker-end="url(#ah)" opacity=".85"/>`;
+      if(isSel)inner+=`<circle data-role="handle" cx="${hx}" cy="${hy}" r="30" fill="#EF9F27" fill-opacity=".35" stroke="#EF9F27" stroke-width="4"/>`;
+    }else if(isSel){
+      const hx=cx+Math.sin(fa)*80,hy=cy-Math.cos(fa)*80;
+      inner+=`<line x1="${cx}" y1="${cy}" x2="${hx}" y2="${hy}" stroke="#EF9F27" stroke-width="3" stroke-dasharray="6 6" opacity=".8"/><circle data-role="handle" cx="${hx}" cy="${hy}" r="30" fill="#EF9F27" fill-opacity=".35" stroke="#EF9F27" stroke-width="4"/>`;
+    }
+    inner+=`<circle data-role="body" cx="${cx}" cy="${cy}" r="${R}" fill="${fill}" stroke="${isSel?'#EF9F27':(isMe?'#17222b':'#fff')}" stroke-width="${isSel?8:(isMe?7:4)}"/>`;
+    {const sx=Math.sin(fa),cy2=-Math.cos(fa),px_=Math.cos(fa),py_=Math.sin(fa);
+     const tipx=cx+sx*(R+14),tipy=cy+cy2*(R+14),b1x=cx+sx*(R-4)+px_*11,b1y=cy+cy2*(R-4)+py_*11,b2x=cx+sx*(R-4)-px_*11,b2y=cy+cy2*(R-4)-py_*11;
+     inner+=`<polygon points="${tipx},${tipy} ${b1x},${b1y} ${b2x},${b2y}" fill="#fff" stroke="${fill}" stroke-width="2" pointer-events="none"/>`;}
+    inner+=`<text x="${cx}" y="${cy+1}" text-anchor="middle" dominant-baseline="central" font-family="Barlow Condensed,sans-serif" font-weight="600" font-size="30" fill="#fff" pointer-events="none">${p.label}</text>`;
+    if(holder===p.id){
+      const a=(faceOf(p)+(p.h===null?35:25))*Math.PI/180;
+      const kx=cx+Math.sin(a)*(R+22),ky=cy-Math.cos(a)*(R+22);
+      puckSvg=`<line x1="${cx+Math.sin(a)*R*0.9}" y1="${cy-Math.cos(a)*R*0.9}" x2="${kx}" y2="${ky}" stroke="${fill}" stroke-width="7" stroke-linecap="round" pointer-events="none"/><circle cx="${kx}" cy="${ky}" r="13" fill="#111" stroke="${fill}" stroke-width="4" pointer-events="none"/>`;
+    }
+    g.innerHTML=inner;
+    gP.appendChild(g);
+  }
+  if(puckSvg)gP.insertAdjacentHTML('beforeend',puckSvg);
+  renderQ();
+  if(!holder&&state.loose){const lx=state.loose.x*S,ly=(200-state.loose.y)*S;gP.insertAdjacentHTML('beforeend',`<circle cx="${lx}" cy="${ly}" r="13" fill="#111" stroke="#fff" stroke-width="3" pointer-events="none"/>`);}
+  renderReco();
+  renderPanel();
+}
+function renderReco(){
+  gR.innerHTML='';
+  if(!reco||!plan)return;
+  const done=play.t>=plan.seconds;
+  let out='';
+  for(const p of state.players){
+    const m=plan.moves[p.id];if(!m||p.id===state.me)continue;
+    const col=p.team==='us'?'#1D9E75':'#D85A30';
+    out+=`<line x1="${p.x*S}" y1="${(200-p.y)*S}" x2="${m.x*S}" y2="${(200-m.y)*S}" stroke="${col}" stroke-width="4" stroke-dasharray="10 12" opacity="${done?.25:.5}"/>`;
+  }
+  const me=state.players.find(p=>p.id===state.me);
+  const tx=reco.x*S,ty=(200-reco.y)*S;
+  out+=`<line x1="${me.x*S}" y1="${(200-me.y)*S}" x2="${tx}" y2="${ty}" stroke="#185FA5" stroke-width="7" stroke-dasharray="18 14" marker-end="url(#ah2)" opacity="${done?.35:1}"/>
+  <circle cx="${tx}" cy="${ty}" r="44" fill="#185FA5" fill-opacity=".15" stroke="#185FA5" stroke-width="5" stroke-dasharray="10 8" class="${done?'':'pulse'}"/>
+  <text x="${tx}" y="${ty-58}" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="600" font-size="30" fill="#185FA5">${esc(reco.label||'Go here')}</text>`;
+  gR.innerHTML=out;
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function renderPanel(){
+  const p=state.players.find(q=>q.id===sel);
+  const name=document.getElementById('whoname'),chip=document.getElementById('whochip');
+  const puckBtn=document.getElementById('puckBtn'),stopBtn=document.getElementById('stopBtn'),selfBtn=document.getElementById('selfBtn');
+  if(!p){name.textContent='Tap a player';chip.className='chip';puckBtn.disabled=stopBtn.disabled=selfBtn.disabled=true;puckBtn.classList.remove('on');stopBtn.classList.remove('on');selfBtn.classList.remove('on');return;}
+  chip.className='chip '+(p.team==='us'?'t':'c');
+  name.textContent=(p.team==='us'?'Your ':'Their ')+p.label+(state.me===p.id?' (you)':'');
+  puckBtn.disabled=stopBtn.disabled=false;selfBtn.disabled=p.team!=='us';
+  puckBtn.classList.toggle('on',state.puck===p.id);
+  puckBtn.textContent=state.puck===p.id?'Has the puck':'Give the puck';
+  stopBtn.classList.toggle('on',p.h===null);
+  stopBtn.textContent=p.h===null?'Standing still':'Skating';
+  selfBtn.classList.toggle('on',state.me===p.id);
+}
+
+let drag=null;
+function toSvg(ev){const pt=svg.createSVGPoint();pt.x=ev.clientX;pt.y=ev.clientY;return pt.matrixTransform(svg.getScreenCTM().inverse());}
+let tap=null;
+svg.addEventListener('pointerdown',ev=>{
+  const t=ev.target.closest('[data-role]');
+  if(quiz.on){
+    if(!rinkHandler)return;
+    const g=t?t.closest('g[data-id]'):null;
+    tap={x:ev.clientX,y:ev.clientY,id:g?g.dataset.id:null,pid:ev.pointerId};
+    return;
+  }
+  if(!t){sel=null;render();return;}
+  const g=t.closest('g[data-id]');const id=g.dataset.id;
+  const p=state.players.find(q=>q.id===id);
+  sel=id;
+  drag={id,role:t.dataset.role,moved:false};
+  svg.setPointerCapture(ev.pointerId);
+  if(!quiz.on)showSheet();
+  render();
+  ev.preventDefault();
+});
+svg.addEventListener('pointermove',ev=>{
+  if(!drag)return;
+  const p=state.players.find(q=>q.id===drag.id);
+  const m=toSvg(ev);
+  if(drag.role==='body'){
+    p.x=Math.max(2,Math.min(83,m.x/S));
+    p.y=Math.max(2,Math.min(198,200-m.y/S));
+  }else{
+    const {cx,cy}=px(p);
+    const ang=Math.round((Math.atan2(m.x-cx,-(m.y-cy))*180/Math.PI+360)%360);
+    if(p.h===null)p.fa=ang;else{p.h=ang;p.fa=ang;}
+  }
+  drag.moved=true;clearPlan();render();
+});
+function clearPlan(){reco=null;plan=null;stopPlay();play.t=0;document.getElementById('play').classList.add('hidden');}
+function endDrag(ev){
+  if(tap&&ev&&ev.type==='pointerup'&&rinkHandler){
+    const dx=ev.clientX-tap.x,dy=ev.clientY-tap.y;
+    if(Math.hypot(dx,dy)<10){const m=toSvg(ev);rinkHandler({x:Math.max(1,Math.min(84,m.x/S)),y:Math.max(1,Math.min(199,200-m.y/S)),id:tap.id});}
+  }
+  tap=null;
+  if(drag){drag=null;save();}
+}
+let rinkHandler=null;
+svg.addEventListener('pointerup',endDrag);
+svg.addEventListener('touchmove',ev=>{if(drag)ev.preventDefault();},{passive:false});
+svg.addEventListener('touchstart',ev=>{if(ev.target.closest&&ev.target.closest('[data-role]'))ev.preventDefault();},{passive:false});
+svg.addEventListener('pointercancel',endDrag);
+
+document.getElementById('puckBtn').onclick=()=>{if(!sel)return;state.puck=sel;clearPlan();save();render();};
+document.getElementById('stopBtn').onclick=()=>{if(!sel)return;const p=state.players.find(q=>q.id===sel);if(p.h===null){p.h=faceOf(p);}else{p.fa=p.h;p.h=null;}clearPlan();save();render();};
+document.getElementById('selfBtn').onclick=()=>{if(!sel)return;const p=state.players.find(q=>q.id===sel);if(p.team!=='us')return;state.me=sel;clearPlan();save();render();};
+
+const presets={
+ reset:()=>{state.players=base();state.puck='oc';state.me='rw';},
+ breakout:()=>{state.players=base();Object.assign(f('rd'),{x:38,y:8,h:90});Object.assign(f('ld'),{x:20,y:20,h:null});Object.assign(f('rw'),{x:60,y:40,h:60});Object.assign(f('lw'),{x:18,y:48,h:null});Object.assign(f('c'),{x:42,y:35,h:0});Object.assign(f('oc'),{x:40,y:30,h:180});Object.assign(f('olw'),{x:68,y:60,h:null});Object.assign(f('orw'),{x:14,y:60,h:null});Object.assign(f('ord'),{x:22,y:78,h:null});Object.assign(f('old'),{x:62,y:78,h:null});state.puck='rd';},
+ corner:()=>{state.players=base();Object.assign(f('olw'),{x:78,y:14,h:null});Object.assign(f('rd'),{x:72,y:18,h:null});Object.assign(f('ld'),{x:38,y:12,h:null});Object.assign(f('c'),{x:50,y:22,h:null});Object.assign(f('rw'),{x:66,y:45,h:null});Object.assign(f('lw'),{x:22,y:50,h:null});Object.assign(f('oc'),{x:40,y:28,h:null});Object.assign(f('orw'),{x:22,y:22,h:null});Object.assign(f('old'),{x:65,y:62,h:null});Object.assign(f('ord'),{x:22,y:62,h:null});state.puck='olw';},
+ forecheck:()=>{state.players=base();Object.assign(f('old'),{x:60,y:185,h:200});Object.assign(f('ord'),{x:25,y:178,h:null});Object.assign(f('oc'),{x:42,y:160,h:null});Object.assign(f('olw'),{x:70,y:150,h:null});Object.assign(f('orw'),{x:14,y:150,h:null});Object.assign(f('c'),{x:50,y:165,h:0});Object.assign(f('rw'),{x:68,y:140,h:0});Object.assign(f('lw'),{x:18,y:140,h:null});Object.assign(f('rd'),{x:62,y:118,h:null});Object.assign(f('ld'),{x:24,y:118,h:null});state.puck='old';},
+ ozone:()=>{state.players=base();Object.assign(f('c'),{x:76,y:170,h:180});Object.assign(f('lw'),{x:46,y:178,h:null});Object.assign(f('rw'),{x:72,y:145,h:null});Object.assign(f('rd'),{x:62,y:125,h:null});Object.assign(f('ld'),{x:24,y:128,h:null});Object.assign(f('old'),{x:68,y:168,h:null});Object.assign(f('ord'),{x:38,y:178,h:null});Object.assign(f('oc'),{x:55,y:160,h:null});Object.assign(f('olw'),{x:64,y:135,h:null});Object.assign(f('orw'),{x:26,y:138,h:null});state.puck='c';}
+};
+function f(id){return state.players.find(p=>p.id===id);}
+document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{state.loose=null;presets[b.dataset.preset]();for(const p of state.players)if(p.h===null)p.fa=undefined;autoFace();sel=null;clearPlan();save();render();});
+
+function zone(y){return y<75?"own defensive zone":(y<=125?"neutral zone":"offensive zone");}
+function lateral(x){return x<28?"left side":(x<=57?"middle":"right side");}
+function depth(y){
+  if(y<11)return"behind own net";if(y<25)return"low, near own net";if(y<50)return"half-wall area of own zone";if(y<75)return"high in own zone, near own blue line";
+  if(y<100)return"neutral zone, own half";if(y<125)return"neutral zone, their half";
+  if(y<150)return"just inside their blue line";if(y<175)return"half-wall area of their zone";if(y<189)return"low, near their net";return"behind their net";
+}
+const DIRS=["straight up ice toward their net","up ice and to the right","toward the right boards","back and to the right","back toward own net","back and to the left","toward the left boards","up ice and to the left"];
+const dirWord=h=>DIRS[Math.round(((h%360)+360)%360/45)%8];
+function headDesc(h,fa){
+  if(h===null)return"standing still, facing "+dirWord(fa);
+  return"skating "+dirWord(h);
+}
+function describe(){
+  const me=f(state.me);
+  const lines=state.players.filter(p=>!p.off).map(p=>{
+    const who=(p.team==='us'?'MY TEAM ':'OPPONENT ')+p.label+(p.id===state.me?' (THIS IS ME)':'');
+    return `- ${who}: ${zone(p.y)}, ${lateral(p.x)}, ${depth(p.y)} [x=${p.x.toFixed(0)} ft from left boards, y=${p.y.toFixed(0)} ft from my own end boards]; ${headDesc(p.h,faceOf(p))}${state.puck===p.id?'; HAS THE PUCK':''}`;
+  }).join('\n');
+  return `You are an experienced ice hockey coach advising a recreational player.
+
+ABOUT ME: I play ${me.label} on a 5-on-5 shift. I shoot right. I'm facing up ice toward the opponent's net. "Left" and "right" are from my perspective facing up ice. The rink is 85 ft wide (x: 0 = left boards, 85 = right boards) and 200 ft long (y: 0 = boards behind my own net, 11 = my goal line, 75 = my blue line, 125 = their blue line, 189 = their goal line, 200 = boards behind their net).
+
+CURRENT SITUATION (a snapshot of this instant):
+${lines}
+
+TASK: Tell me what I should do right now, over the next 2–4 seconds, as a matter of positioning. Be concrete and specific to this exact picture. Pick ONE spot to go to (or to hold) and give its coordinates in the same x/y feet system. Prefer the sound structural play over the flashy one. If the right play is to stay put, say so and give my current coordinates.
+
+Then play the sequence forward: give the most likely end position after that many seconds for EVERY player who would move (teammates reacting correctly, opponents reacting realistically, goalies barely moving). Realistic skating: a player covers at most about 8 ft per second from a standstill and 25 ft per second at full speed, so nobody moves more than seconds×25 ft. Keep everyone inside the rink (x 1–84, y 1–199). Also say who has the puck at the end and, if it is passed or lost, at what fraction of the sequence that happens.
+
+Reply with ONLY a JSON object, no other text, in this exact shape:
+{"read": "one sentence (max 22 words) naming the situation", "move": {"x": number, "y": number, "label": "2–4 word name of the spot"}, "why": "max 40 words", "stick": "max 20 words on stick position, body angle and where my eyes should be", "watch": "max 25 words on what would change the right play", "seconds": number, "moves": [{"id": "player id", "x": number, "y": number}], "puck": {"to": "player id", "at": number between 0 and 1}}
+
+Player ids: ${state.players.map(p=>p.id+' = '+(p.team==='us'?'my ':'their ')+p.label).join(', ')}. Include my own id in "moves" with the same coordinates as "move".`;
+}
+
+
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const jit=(v,a)=>Math.max(2,Math.min(83,v+rnd(-(a||3),a||3)));
+const jy=(v,a)=>Math.max(2,Math.min(198,v+rnd(-(a||3),a||3)));
+function setP(id,x,y,h,fa){const p=f(id);p.x=jit(x);p.y=jy(y);p.h=(h===undefined||h===null)?null:Math.round((h+rnd(-15,15)+360)%360);p.fa=(typeof fa==='number')?fa:(p.h!==null?p.h:undefined);}
+const sideWord=s=>s>0?'right':'left';
+const otherSide=s=>s>0?'left':'right';
+const X=(s,off)=>42.5+s*off;
+
+/* ---- Authoring helpers ----
+   opt(text, grade, feedback, plan)   grade: 2 = right, 1 = close, 0 = not this
+   mkplan(label, seconds, moves, to, at) moves: [[id,x,y],...] absolute feet; to: puck holder at end; at: 0..1
+   A question is {type, prompt, ...}. Every type is registered in qTypes below.          */
+const opt=(text,grade,feedback,plan)=>({text,grade,feedback,plan});
+const mkplan=(label,seconds,moves,to,at)=>({label,seconds,moves,puck:{to,at}});
+const choice=(prompt,options)=>({type:'choice',prompt,options});
+
+/* More authoring helpers */
+const pickOne=arr=>arr[Math.floor(Math.random()*arr.length)];
+const spot=(prompt,target,label,fb,plan,r1,r2)=>({type:'spot',prompt,target,label,fb,plan,r1:r1||9,r2:r2||18});
+const order=(prompt,ids,fb,plan)=>({type:'order',prompt,ids,roles:['F1','F2','F3'],fb,plan});
+const pick=(prompt,answer,partial,fb,plan)=>({type:'pick',prompt,answer,partial:partial||[],fb,plan});
+const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+function fwdOrder(targetId){const t=f(targetId);return ['c','lw','rw'].map(id=>f(id)).sort((a,b)=>dist(a,t)-dist(b,t)).map(p=>p.id);}
+const nameOf=id=>{const p=f(id);return (p.team==='us'?'your ':'their ')+p.label;};
+
+const scenarios=[
+ {name:'Dump-in forecheck',build(s){
+  const v=Math.random()<.5?'c':'rw';
+  setP('old',X(s,32),194,s>0?270:90);setP('ord',X(s,-20),178);setP('og',42.5,187);
+  setP('oc',42.5,150,180);setP('olw',X(s,25),140,180);setP('orw',X(s,-28),135,180);
+  if(v==='c'){setP('c',X(s,8),162,0);setP('rw',X(s,22),142,0);}else{setP('c',X(s,-6),148,0);setP('rw',X(s,22),168,0);}
+  setP('lw',X(s,-26),140,0);setP('rd',62,120);setP('ld',24,120);setP('g',42.5,13);state.puck='old';
+  const wall=X(s,36);
+  const planC=mkplan('Take the strong-side wall',3,[['rw',wall,165],['c',X(s,28),190],['lw',X(s,-12),150],['old',X(s,34),186],['olw',X(s,22),162]],'rw',.8);
+  const planR=mkplan('Angle the carrier',3,[['rw',X(s,30),190],['c',X(s,18),168],['lw',X(s,-14),150],['old',wall,182],['olw',X(s,20),160]],'c',.85);
+  const q1=choice('What do you do?',[
+    opt('Go hard at their D behind the net. I am F1.',v==='rw'?2:0,
+      v==='rw'?'Yes. You are closest, so you are F1 by arrival. Angle him toward the boards, take away his time, and let your center take F2.':'Your center is already there. Two forwards on the carrier leaves nobody on the outlet, and the far wing is now both F2 and F3.',planR),
+    opt('Read who is first. My center is, so I take F2: close on the strong-side wall where the D wants to pass.',v==='c'?2:1,
+      v==='c'?'Right. F2 reads where F1 forces the puck and takes the outlet. Here that is the wall on your side, so get there before the pass does.':'Reasonable thinking, but look again: you are the closest one, not your center. Hesitating gives their D a free first pass.',planC),
+    opt('Stay high at the top of the circle as F3 so we are not caught.',1,
+      'Safe but passive. F3 is the job of the forward furthest away, and that is your left wing. Second-closest means F2, and F2 has to move.',null),
+    opt('Drive to the net front for a rebound.',0,
+      'Nobody on your team has the puck. A body at the net front before possession is a body doing nothing while their D breaks out.',null)
+  ]);
+  const ord=fwdOrder('old');
+  const q2=order('Tap your three forwards in the order they take F1, F2 and F3.',ord,
+    {right:'Right. Arrival order, nothing else: closest is F1 on the carrier, next is F2 on the outlet, furthest stays high as F3.',
+     f1:'You found F1, which is the hard one. F2 is whoever is next closest, not whoever is on the puck side.',
+     wrong:'Start from the puck. Who gets to the carrier first? That player is F1 regardless of position. Then count outward.'},
+    v==='c'?planC:planR);
+  return {caption:`Your team just dumped the puck in. Their D is picking it up behind the net on the ${sideWord(s)} side and their forwards are curling back to help. Nobody on your line has a forecheck role yet.`,q:pickOne([q1,q2,q2])};}},
+
+ {name:'Puck in your corner',build(s){
+  setP('olw',X(s,36),14);setP('rd',X(s,30),19);setP('ld',X(s,-5),12);setP('c',X(s,8),24);
+  setP('oc',X(s,2),28);setP('orw',X(s,-22),22);setP('old',X(s,20),66);setP('ord',X(s,-20),64);
+  setP('rw',42.5+26,46);setP('lw',42.5-24,46);setP('g',42.5,13);setP('og',42.5,187);state.puck='olw';
+  const strong=s>0;
+  const strongD=s>0?'old':'ord', weakD=s>0?'ord':'old';
+  const planS=mkplan('Cover the point',3,[['rw',X(s,22),56],[strongD,X(s,24),64],['olw',X(s,34),20],['c',X(s,6),26]],strongD,.6);
+  const planW=mkplan('Sag to the middle',3,[['rw',X(s,-14),46],[weakD,X(s,-22),64],['olw',X(s,34),20],['c',X(s,6),26]],'olw',1);
+  const q1=choice(strong?'The puck is on your side. What do you do?':'The puck is on the far side. What do you do?',strong?[
+    opt('Stay high on my side, above their D at the point, stick in his shooting lane, eyes on him.',2,'That is the strong-side winger\u2019s job. Your D has the carrier and your center has the slot. If the puck goes up to the point, you are already there.',planS),
+    opt('Collapse into the slot to help with their center.',1,'Their center is your center\u2019s job. Collapse only if your center is beaten or the puck is about to come to the slot; otherwise you have just given their D a free shot.',null),
+    opt('Go into the corner to double-team the puck.',0,'Three bodies in the corner and nobody on the point. The pass up the wall is now an open shot from the blue line.',null),
+    opt('Cheat out toward the blue line to be ready for a breakout pass.',0,'Your team does not have the puck yet. Leaving early turns a 5-on-5 in your zone into a 5-on-4 against you.',null)
+  ]:[
+    opt('Sag toward the middle, between their far D and the slot, ready to jump out to my point if the puck comes across.',2,'Right. As the weak-side winger you protect the slot first and your point second, because the puck has to cross the whole ice to get to your D-man.',planW),
+    opt('Stay wide on my point man, stick in his lane, exactly like the strong-side winger.',1,'Not wrong, but it is the strong-side read on the weak side. From your point there is no quick shot; the danger is the slot, so you can afford to sag in a few steps.',null),
+    opt('Skate across to the puck side to help in the corner.',0,'That leaves the whole far half of the zone to your center alone. If the puck comes across, their D and winger have the slot to themselves.',null),
+    opt('Drift up to the blue line for a stretch pass.',0,'No possession, no stretch. You are the only one who can get to the weak-side point, and you have just left it.',null)
+  ]);
+  const q2=pick('Tap the opponent you are responsible for right now.',strong?strongD:weakD,strong?[]:['oc'],
+    strong?{right:'Yes: the point man on your side. Stick in his lane, eyes on him, and let your D and center handle the corner and the slot.',
+            partial:'',wrong:'Look at who can hurt you from your side. The puck carrier is your D\u2019s problem and the slot is your center\u2019s. The D at the point on your side is yours.'}
+          :{right:'Yes: the far-side D is yours, but from a sagged position in the middle, because the puck has a long way to travel to him.',
+            partial:'Close. The slot is the danger, but it is your center\u2019s man first. You cover the far-side D while staying close enough to the middle to help.',
+            wrong:'The puck is on the far side, so the players near it belong to your D, your center and your other winger. Your man is the one the puck would have to cross the ice to reach.'},
+    strong?planS:planW);
+  const q3=spot(strong?'Tap where you should be standing.':'Tap where you should be standing.',strong?{x:X(s,22),y:56}:{x:X(s,-14),y:46},strong?'Above the point man':'Sagged, slot side',
+    strong?{right:'That is it: between the point man and the net, high enough to stay on him, close enough to block the lane.',close:'Right idea, a few steps off. You want to be on the net side of their D, not level with him or wide of him.',wrong:'Think strong side: the puck is in your corner, so your job is the D at your point. Be between him and the net.'}
+          :{right:'Good. Weak-side winger: sagged toward the slot, still able to reach your point in two strides.',close:'Nearly. Sag a little more toward the middle; from the weak side the slot is the threat, not the point.',wrong:'The puck is on the far side. You are the weak-side winger, so you come off the wall toward the slot and stay between the far D and the net.'},
+    strong?planS:planW);
+  return {caption:`Their winger has the puck in your ${sideWord(s)} corner and your D is on him. Their center is drifting into the slot and both their D are at the points.`,q:pickOne([q1,q2,q3])};}},
+
+ {name:'Breakout',build(s){
+  setP('rd',X(s,8),7,s>0?90:270);setP('ld',X(s,-18),20);setP('g',42.5,13);
+  setP('oc',X(s,2),27,180);setP('olw',X(s,26),58);setP('orw',X(s,-26),58);setP('old',X(s,20),78);setP('ord',X(s,-20),78);
+  setP('c',42.5,34,0);setP('rw',68,42);setP('lw',17,42);setP('og',42.5,187);state.puck='rd';
+  const toMe=s>0;
+  const planM=mkplan('Half-wall, stopped',3,[['rw',78,40],['rd',X(s,14),18],['c',44,52],['lw',16,52],['oc',X(s,6),16],['olw',X(s,26),52]],'rw',.75);
+  const planA=mkplan('Weak-side timing',3,[['rw',70,62],['rd',X(s,14),18],['lw',X(s,34),42],['c',44,52],['oc',X(s,6),16]],'lw',.75);
+  const q1=choice(toMe?'Your D is turning up ice toward your side. What do you do?':'Your D is turning up ice away from your side. What do you do?',toMe?[
+    opt('Get to the right half-wall, stop, face the D with my forehand open, and call for it.',2,'Yes. Be there before he turns up ice, stopped, so he sees a target and not a moving guess. Decide chip, carry or reverse before the puck arrives.',planM),
+    opt('Skate up through the half-wall toward the blue line so I am moving when the pass comes.',0,'Then the pass has to lead a moving target through the forechecker. If it misses, you are the one furthest from the puck.',null),
+    opt('Go low to help my D behind the net.',0,'That is the center\u2019s job. Two helpers low and nobody on the wall means there is no outlet when he turns.',null),
+    opt('Cut into the middle to give him a pass up the gut.',1,'The center is already filling the middle. Your job is width; two players in the middle makes the wall pass impossible.',null)
+  ]:[
+    opt('Hold my half-wall but start up ice slowly, so I am the weak-side option for a cross-ice or a chip to the far side.',2,'Good. When the breakout goes the other way, the weak-side winger is the second wave: wide, timing it so you hit the blue line with speed if the puck comes across.',planA),
+    opt('Stop on my half-wall, face my D and wait.',1,'Fine on the strong side, but on the weak side a stopped winger is nowhere near the play. Stay wide, but start moving.',null),
+    opt('Skate across to the puck side to give him a closer option.',0,'Now both wingers and the center are on one half of the ice, and the whole far side is empty for them to pinch into.',null),
+    opt('Go straight to the blue line and wait for a stretch pass.',0,'Through a forechecker and two D? Realistically that pass does not get there, and you are offside the moment it does.',null)
+  ]);
+  const q2=spot('Tap where you want to be when your D looks up.',toMe?{x:78,y:40}:{x:70,y:60},toMe?'Half-wall':'Weak-side lane',
+    toMe?{right:'The half-wall, stopped, forehand to the puck. Exactly where he expects you.',close:'Nearly: tighter to the boards and level with the hash marks. The D is looking for a target on the wall, not a guess in the middle.',wrong:'He is turning up ice toward you. Your spot is the right half-wall, stopped, before he looks.'}
+         :{right:'Right: wide on your side, a little higher than the half-wall, already drifting up ice as the weak-side option.',close:'Close. Keep the width, just a bit higher than you tapped so you can hit the line with speed when it comes across.',wrong:'The breakout goes the other way, so you are the second wave. Stay wide on your side and start moving up, rather than coming to the puck.'},
+    toMe?planM:planA,10,22);
+  return {caption:`Your D has just picked up the puck behind your net and is turning up ice to the ${sideWord(s)}. Their first forechecker is about 20 feet away and closing.`,q:pickOne([q1,q2])};}},
+
+ {name:'Breakout: who is open',build(s){
+  const cov=pickOne(['rw','c','lw']);
+  setP('rd',X(s,6),8,s>0?60:300);setP('ld',X(s,-16),22);setP('g',42.5,13);
+  setP('c',42.5,36,0);setP('rw',76,40);setP('lw',9,40);setP('og',42.5,187);
+  setP('oc',X(s,2),22,180);
+  setP('olw',cov==='rw'?70:X(s,26),cov==='rw'?44:62);
+  setP('orw',cov==='lw'?15:X(s,-26),cov==='lw'?44:62);
+  if(cov==='c'){setP('orw',40,46);setP('olw',X(s,26),62);}
+  setP('old',60,80);setP('ord',25,80);state.puck='rd';
+  const open=['rw','c','lw'].filter(id=>id!==cov);
+  const best=open.includes('rw')?'rw':open[0];
+  const other=open.find(id=>id!==best);
+  const pl=mkplan('Pass to the open man',3,[[best,f(best).x,f(best).y+6],['rd',X(s,12),18],['oc',X(s,6),14]],best,.6);
+  const q=pick('Your D is about to pass. Tap the teammate who is open.',best,[other],
+    {right:`Yes, ${nameOf(best)} is the free man. ${best==='rw'?'That is you: stopped on the wall, forehand ready.':'Their forechecker took away your wall, so the puck has to go the other way.'}`,
+     partial:`Also open, but ${nameOf(best)} is the better outlet: ${best==='rw'?'the wall is the safe side and the puck comes to your forehand':'that pass is shorter and away from the pressure'}.`,
+     wrong:`${nameOf(cov)} is covered: look at the opponent standing right on him. The pass has to go to someone with ice around him.`},pl);
+  return {caption:`Your D has the puck behind the net with their center coming at him. One of your forwards is covered, two are not. He has to move it now.`,q};}},
+
+ {name:'Regroup',build(s){
+  setP('ld',X(s,-20),70,0);setP('rd',X(s,20),62);setP('g',42.5,13);
+  setP('c',42.5,92,s>0?300:60);setP('rw',66,100,180);setP('lw',19,100,180);
+  setP('oc',42.5,112);setP('olw',66,125);setP('orw',19,125);setP('old',60,150);setP('ord',25,150);setP('og',42.5,187);state.puck='ld';
+  const pl=mkplan('Swing and time it',3,[['rw',74,84],['c',46,88],['lw',16,86],['ld',X(s,-18),76],['oc',42.5,106]],'rw',.85);
+  const q1=choice('What do you do?',[
+    opt('Swing back toward my D, low and wide on my side, timing it so I am skating up ice when he is ready to pass.',2,'Right. A regroup is about timing: come back far enough that you receive the puck going forward, with speed, instead of flat-footed at the red line.',pl),
+    opt('Stop at the red line on my side and wait for the pass.',0,'A stationary target in front of their 1-2-2 is exactly what the trap wants. You would receive it standing still with a winger on you.',null),
+    opt('Stretch to their blue line for a long pass over the top.',1,'It can work once as a surprise, but through a 1-2-2 the long pass is usually picked off, and you are offside if it is chipped in. Keep it as the second option.',null),
+    opt('Cross over to the left side to confuse them.',0,'Two wingers on one side leaves your D with nobody on the right. Keep your lane; the center is the one who crosses.',null)
+  ]);
+  const q2=spot('Tap the spot you swing back to before turning up ice.',{x:74,y:82},'Swing low and wide',
+    {right:'That is the swing: low enough to receive the pass going forward, wide enough to keep your lane.',close:'Close. Come a little deeper; you want to be skating up ice with speed when the pass arrives, not just starting.',wrong:'Think timing, not position. Come back low and wide on your side so that you are moving forward when your D is ready.'},pl,10,24);
+  return {caption:`Your D has the puck at your blue line with time. The forwards had gone ahead and are now swinging back to regroup. Their team has set up a 1-2-2 in the neutral zone.`,q:pickOne([q1,q2])};}},
+
+ {name:'Offensive-zone cycle',build(s){
+  setP('c',X(s,34),168,180);setP('old',X(s,28),174);setP('lw',X(s,6),182);setP('ord',X(s,-6),178);setP('og',42.5,187);
+  setP('oc',X(s,8),162);setP('olw',X(s,22),150,s>0?225:135);setP('orw',X(s,-22),138);
+  setP('rw',X(s,30),145);setP('rd',62,124);setP('ld',24,124);setP('g',42.5,13);state.puck='c';
+  const pl=mkplan('Support the cycle',3,[['rw',X(s,37),178],['c',X(s,22),184],['lw',X(s,4),184],['old',X(s,30),180],['olw',X(s,26),160]],'rw',.6);
+  const q1=choice('Your center is pinned on the wall. What do you do?',[
+    opt('Come down the wall behind him so he can bump the puck back to me and keep the cycle going.',2,'That is the cycle. The pinned player\u2019s only safe outlet is low along the boards. You take it, he spins off to the net or the slot, and the D never get a clean look at the puck.',pl),
+    opt('Go to the net front to get a tip or rebound.',1,'Your left wing is already there. Two at the net and nobody on the wall means the cycle dies and the puck goes to their D.',null),
+    opt('Stay at the top of the circle as the high forward so we are safe if they get it.',1,'Your D is high already. The cycle needs a body low. Staying high is only right if your D has pinched down the wall.',null),
+    opt('Cross to the far side to pull their winger with me and open the ice.',0,'That takes away his one outlet. He is pinned; the puck goes into the corner and their D wins it.',null)
+  ]);
+  const q2=spot('Tap where you go to support him.',{x:X(s,37),y:177},'Low on the wall',
+    {right:'On the wall, below him. He bumps it back to you and spins off; the cycle lives.',close:'Right lane, wrong depth. Support on a cycle comes from below the puck along the boards, not level with it.',wrong:'He is pinned, so his only outlet is low along the wall. Go there. The net and the slot are already taken.'},pl);
+  return {caption:`Your center has the puck on the ${sideWord(s)} half-wall in their zone and is being pinned by their D. Your other winger is at the net front. Their winger on that side is sagging down from the point toward the slot.`,q:pickOne([q1,q2])};}},
+
+ {name:'Rush against',build(s){
+  setP('old',X(s,8),120,180);setP('olw',X(s,30),112,180);setP('oc',X(s,-20),108,180);setP('orw',X(s,-30),135);setP('ord',X(s,20),150);setP('og',42.5,187);
+  setP('rd',55,80,180);setP('ld',30,82,180);setP('g',42.5,13);
+  setP('rw',X(s,24),118,180);setP('c',X(s,-6),128,180);setP('lw',X(s,-26),140,180);state.puck='old';
+  const pl=mkplan('Take the trailer',3,[['rw',X(s,22),88],['olw',X(s,26),90],['old',X(s,4),92],['oc',X(s,-18),86],['rd',52,66],['ld',32,68],['c',X(s,-6),100]],'old',1);
+  const q1=choice('They are coming 3-on-2. What do you do?',[
+    opt('Skate hard and pick up their trailer on my side, staying between him and our net, so my D can play it as a 2-on-2.',2,'Yes. The first forward back takes the third attacker, always. Your D handle the carrier and the far man; your job is the late option they cannot cover.',pl),
+    opt('Chase the puck carrier and try to lift his stick from behind.',0,'Your D already has him. A stick lift from behind is a low-percentage play and a penalty half the time, and the trailer walks in alone.',null),
+    opt('Go straight to our net front to block the shot.',1,'Too deep too early. The trailer gets a free lane into the slot while you are standing at the crease. Take the man first; the net comes later.',null),
+    opt('Stay in the neutral zone so we can counter if the goalie saves it.',0,'That is a 3-on-2 you chose not to help with. Backcheck first; the counter comes from winning the puck.',null)
+  ]);
+  const q2=pick('Tap the attacker you take.',  'olw',['oc'],
+    {right:'The trailer. Your D have the carrier and the far winger; the late man is the one nobody else can reach.',partial:'That is the far winger, and your weak-side D already has him. The trailer behind the play is the uncovered man.',wrong:'Not the carrier; your D is on him. The first forward back always takes the third attacker, the one trailing the rush.'},pl);
+  return {caption:`Turnover at their blue line. They're coming back 3-on-2 against your D, and you are the first forward back, a stride behind their trailer on the ${sideWord(s)} side.`,q:pickOne([q1,q2,q2])};}},
+
+ {name:'Point shot',build(s){
+  setP('ld',24,130);setP('rd',62,128);setP('g',42.5,13);
+  setP('rw',72,162);setP('lw',30,182);setP('c',48,172);
+  setP('og',42.5,187);setP('old',52,180);setP('ord',34,176);setP('oc',44,150);setP('olw',66,140);setP('orw',12,152);state.puck='ld';
+  const pl=mkplan('Far post',3,[['rw',52,184],['c',46,180],['lw',32,184],['old',50,182],['og',43,187]],'og',.5);
+  const q1=choice('Your LD is about to shoot. What do you do?',[
+    opt('Drive to the far post, stick on the ice, timing it so I arrive as the shot comes.',2,'That is where rebounds go on a shot from the left. The goalie is moving left to right; the far post is behind his momentum.',pl),
+    opt('Get in front of the goalie for a screen.',1,'Your center and left wing are already in front. A third screen blocks your own shot more than the goalie. The far post is empty; go there.',null),
+    opt('Stay on the half-wall as the high safety option.',1,'That is your RD\u2019s job. Only hold if your RD has pinched below you; otherwise you are watching from a spot with no rebound in it.',null),
+    opt('Go to the corner to pick up the puck if it misses.',0,'A missed shot that rims comes to the half-wall, not the corner, and it is their D who are closest. Rebounds in front are the real chance.',null)
+  ]);
+  const q2=spot('Tap where you want to be when the shot arrives.',{x:52,y:184},'Far post',
+    {right:'Far post, stick on the ice. On a shot from the left, the rebound comes out to the right.',close:'Nearly. Tighter to the post and a touch deeper; you want the goalie\u2019s blind side, not the top of the crease.',wrong:'The screen is taken. Rebounds from a left-point shot kick out to the right post, so that is where you go.'},pl,8,16);
+  return {caption:`Your LD has the puck at the left point with a clear look and is winding up to shoot. Their goalie can see it. You're on the right half-wall.`,q:pickOne([q1,q2])};}},
+
+ {name:'Lost faceoff in your zone',build(s){
+  const dot={x:X(s,22),y:30};
+  setP('c',dot.x,dot.y-2,null);setP('oc',dot.x,dot.y+2,null);
+  setP('rw',X(s,30),28);setP('lw',X(s,14),28);setP('olw',X(s,30),34);setP('orw',X(s,14),34);
+  setP('rd',X(s,30),16);setP('ld',X(s,8),18);setP('g',42.5,13);
+  setP('old',X(s,18),62,null,s>0?200:160);setP('ord',X(s,-18),60);setP('og',42.5,187);state.puck='old';
+  const strongD=s>0?'old':'ord';const strong=s>0;
+  const tgt=strong?{x:X(s,16),y:50}:{x:X(s,10),y:42};
+  const pl=mkplan(strong?'Out to the point':'Slot side, ready for the far point',3,[['rw',tgt.x,tgt.y],['c',X(s,8),30],['lw',X(s,-2),40]],'old',1);
+  const q=spot('The draw is lost back to their D. Tap where you go.',tgt,strong?'On the point man':'Sagged, slot side',
+    strong?{right:'Straight out to the D on your side, the moment the draw is lost. That shot is the whole reason they want the puck back there.',close:'Right direction, a few feet short. Get all the way out so his shooting lane is blocked, not just contested.',wrong:'When the draw is lost in your zone, the wingers go to the points immediately. The D with the puck is on your side; he is yours.'}
+          :{right:'Good. The puck went to the far point, so you sag toward the slot and keep an eye on the near D rather than racing to the puck side.',close:'Nearly. Hold the middle a bit more; the slot pass is the danger, and your point man is still two strides away.',wrong:'The puck went to the D on the far side. That is your other winger\u2019s man. You sag into the middle, between the slot and the D on your side.'},pl,10,22);
+  return {caption:`Faceoff in your zone on the ${sideWord(s)} dot. Your center loses it cleanly back to their D at the ${sideWord(s)} point. You lined up on the wing.`,q};}},
+
+ {name:'Penalty kill',build(s){
+  f('lw').off=true;
+  setP('old',X(s,18),128,null,s>0?210:150);setP('ord',X(s,-18),126);setP('olw',X(s,34),164);setP('orw',X(s,-34),160);setP('oc',42.5,180);setP('og',42.5,187);
+  setP('rw',X(s,12),150);setP('c',X(s,-12),150);setP('rd',X(s,12),172);setP('ld',X(s,-12),172);setP('g',42.5,13);
+  state.puck='old';
+  const strong=s>0;
+  const tgt=strong?{x:X(s,16),y:140}:{x:X(s,-4),y:146};
+  const pl=mkplan(strong?'Top of the box, puck side':'Top of the box, slot side',2.5,[['rw',tgt.x,tgt.y],['old',X(s,20),126],['c',X(s,-10),146]],'old',1);
+  const q=spot('You are the forward on the right of the box. Tap where you should be.',tgt,strong?'Pressure the point':'Hold the box',
+    strong?{right:'Top of the box on the puck side: close enough to pressure the point man and take away his shot, with your stick in the seam to the half-wall.',close:'Close. A few feet higher and toward the puck; a passive box gives their point man all day.',wrong:'On the kill you stay in the box: you are the top forward on the puck side. Get up toward the point man and take his shooting lane, not down to the net.'}
+          :{right:'Right. On the weak side you hold your corner of the box, cheating toward the slot, so the cross-ice pass to the back door is not a one-timer.',close:'Nearly. Stay a touch more central; your job on the weak side is the seam through the slot, not the far point.',wrong:'The puck is on the far point. You hold your corner of the box and cheat to the middle, so the seam pass across cannot become a one-timer.'},pl,10,22);
+  return {caption:`You are killing a penalty, 4 on 5. Their D has the puck at the ${sideWord(s)} point and their forwards are set up on the half-walls and at the net front.`,q};}},
+
+ {name:'Zone entry, LW carrying',build(s){
+  setP('lw',12,118,0);setP('c',42,112,0);setP('rw',70,112,0);setP('ld',30,88,0);setP('rd',58,86,0);setP('g',42.5,13);
+  setP('ord',26,140,180);setP('old',56,142,180);setP('orw',18,102,0);setP('oc',40,98,0);setP('olw',72,96,0);setP('og',42.5,187);state.puck='lw';
+  const pl=mkplan('Drive wide',3,[['rw',76,150],['lw',14,150],['c',40,142],['ord',26,162],['old',56,164],['olw',70,118],['oc',40,120]],'lw',1);
+  const q1=choice('What do you do?',[
+    opt('Drive wide down the right with speed, staying onside, to stretch their D and open the middle for the center.',2,'Right. Width is your job on the entry. Their D have to respect you, which gives the center the middle lane and your LW room to cut in.',pl),
+    opt('Cut into the middle lane early to be the pass option.',1,'The center is driving the middle. Two in the middle and nobody wide lets their D squeeze the whole entry into one lane.',null),
+    opt('Slow down at the blue line to make sure I stay onside.',1,'Staying onside matters, but the puck is on the far wall, so you have time. Slowing to a stop kills the entry; adjust your line, not your speed.',null),
+    opt('Stop at the blue line and wait to see what happens.',0,'Then their right D has nobody to worry about and can slide over to help on your LW. Keep skating.',null)
+  ]);
+  const q2=spot('Tap where you want to be two seconds from now.',{x:76,y:150},'Wide lane',
+    {right:'Wide and deep, just inside the line. Their right D has to honour you and the middle opens for your center.',close:'Right lane. Keep driving: deeper and wider pulls their D with you; stopping short lets him cheat to the middle.',wrong:'The center has the middle. Your lane is the outside, and you want to be past their D, not beside him.'},pl,10,22);
+  return {caption:`Your LW is carrying the puck up the left boards with speed and is about to cross their blue line. You are on the right side, skating with him and a few feet short of the line. Both their D are backing in and their forwards are chasing.`,q:pickOne([q1,q2])};}},
+
+ {name:'Zone entry, LW angled off',build(s){
+  setP('lw',11,121,20);setP('c',40,113,0);setP('rw',68,113,0);setP('ld',28,90,0);setP('rd',58,88,0);setP('g',42.5,13);
+  setP('ord',17,131,200);setP('old',52,142,180);setP('orw',20,106,0);setP('oc',42,100,0);setP('olw',70,98,0);setP('og',42.5,187);state.puck='lw';
+  const pl=mkplan('Read the chip',3,[['lw',16,128],['rw',74,150],['c',40,138],['ord',18,124],['old',56,160],['olw',70,118]],'rw',.85);
+  const q=choice('Their D has stepped up on your LW at the line. What do you do?',[
+    opt('Keep my speed but stay onside and read it: if he chips it past their D to my side I am F1 on it, if he loses it I am already above the puck to backcheck.',2,'That is the read. The far winger on a contested entry is either the first forechecker or the first backchecker, and you only find out in the next second. Be ready for both.',pl),
+    opt('Call for the pass across the blue line.',1,'A flat pass across the line past a stepping-up D is a turnover more often than not. It is an option only if your center has pulled their far D with him.',null),
+    opt('Drive hard into the zone now so I am in position when he gets it in.',0,'The puck has not crossed the line. Drive now and you are offside, and the whistle bails their D out.',null),
+    opt('Stop and wait at the line.',0,'If he chips it in you have no speed to win the race; if he loses it you are standing still while they break out. Keep moving.',null)
+  ]);
+  return {caption:`Your LW is carrying up the left boards but their D has stepped up and is angling him into the wall right at the blue line. You are on the right side, moving with him, just short of the line. He is going to have to chip it or lose it.`,q};}},
+
+ {name:'Zone entry, pass across',build(s){
+  setP('lw',14,126,30);setP('c',44,116,0);setP('rw',66,110,0);setP('ld',30,92,0);setP('rd',58,90,0);setP('g',42.5,13);
+  setP('ord',24,146,180);setP('old',58,148,180);setP('orw',16,108,0);setP('oc',38,104,0);setP('olw',74,100,0);setP('og',42.5,187);state.puck='lw';
+  const pl=mkplan('Late option, right circle',3,[['rw',64,152],['c',44,158],['lw',20,160],['ord',24,164],['old',56,166],['olw',70,122]],'rw',.8);
+  const q1=choice('What do you do?',[
+    opt('Enter now on the right, a half-step behind the center, so I am the late option in the right circle for the pass across.',2,'Yes. The center drives their D back; you arrive late in the space he leaves, facing the puck with your forehand open for a one-timer.',pl),
+    opt('Drive to the net with the center.',1,'Two at the net and the pass has nowhere to go. The late man in the circle is the dangerous option, and that is you.',null),
+    opt('Stay outside the blue line as the safety.',0,'Your D are the safety. You are the third attacker on a 3-on-2; staying out makes it a 2-on-2.',null),
+    opt('Cross behind the center to the left side.',0,'That puts all three forwards on the puck side. Their D can collapse on the LW with no reason to look right.',null)
+  ]);
+  const q2=spot('Tap where you want to receive the pass.',{x:64,y:152},'Right circle, late',
+    {right:'The right circle, a step behind the center, forehand to the puck. That is the one-timer spot.',close:'Right area. Arrive a little later and a little lower; the space opens behind the center, not beside him.',wrong:'The center takes their D to the net. You want the space he leaves: the top of the right circle, facing the puck.'},pl,9,20);
+  return {caption:`Your LW has crossed their blue line on the left with the puck and is looking across. Your center is driving the middle. You are on the right, still just outside the line, with their D backing off you. The middle lane is about to open.`,q:pickOne([q1,q2])};}},
+
+ {name:'Neutral-zone turnover',build(s){
+  setP('old',X(s,10),118,null,180);setP('ord',X(s,-20),112);setP('og',42.5,187);
+  setP('oc',42.5,135,0);setP('olw',X(s,30),140,0);setP('orw',X(s,-30),138,0);
+  const a=pickOne([[['c',X(s,-2),128],['rw',X(s,24),120],['lw',X(s,-26),104]],[['c',42.5,100],['rw',X(s,18),130],['lw',X(s,-24),112]],[['c',X(s,6),108],['rw',X(s,28),134],['lw',X(s,-20),128]]]);
+  for(const m of a)setP(m[0],m[1],m[2],180);
+  setP('rd',58,84);setP('ld',27,86);setP('g',42.5,13);state.puck='old';
+  const ord=fwdOrder('old');
+  const pl=mkplan('Forecheck by arrival',3,[[ord[0],X(s,8),112],[ord[1],X(s,-6),120],[ord[2],42.5,100],['old',X(s,-4),108]],ord[1],.8);
+  const q=order('Their D just picked up a turnover. Tap your forwards in the order they take F1, F2 and F3.',ord,
+    {right:'Right. Same rule as the forecheck in their zone: closest is F1, next is F2 on his best outlet, and the furthest forward stays high so nobody gets behind you.',
+     f1:'F1 is right. Count outward from there: the next closest forward is F2, whoever that is.',
+     wrong:'Forget positions and look at distances. Who reaches their D first? That is F1. Then the next closest, then the last one stays high.'},pl);
+  return {caption:`Loose play in the neutral zone. Their D has just picked up a turnover near their blue line and is looking up. Your three forwards are scattered at different depths.`,q};}},
+
+ {name:'Loose puck',build(s){
+  setP('c',X(s,-4),40);setP('rw',X(s,22),50);setP('lw',X(s,-26),46);setP('rd',X(s,14),22);setP('ld',X(s,-14),20);setP('g',42.5,13);
+  setP('oc',X(s,28),35,s>0?315:45);setP('olw',X(s,24),30);setP('orw',X(s,-24),36);setP('old',X(s,18),70);setP('ord',X(s,-18),70);setP('og',42.5,187);state.puck=null;state.loose={x:jit(X(s,30),2),y:jy(44,2)};
+  const pl=mkplan('Win the race',2.5,[['rw',X(s,30),45],['oc',X(s,30),38],['c',X(s,6),44],['rd',X(s,16),28]],'rw',.4);
+  const q=choice('Nobody has it yet. What do you do?',[
+    opt('Win the race: get there first, body between the puck and their center, chip it out along the wall if I am pressured.',2,'Right. A loose puck in your own zone is a race, and you are closest. Get your body on the wall side so he cannot come through you, then make the safe play.',pl),
+    opt('Let my D take it and get up to cover the point.',0,'Your D is 20 feet away; their center is 10. Leave it and it is their puck in your zone with you out of the play.',null),
+    opt('Wait for the center to arrive and then go to the point.',0,'Same problem. Nobody on your team is closer than you. Hesitate and it belongs to them.',null),
+    opt('Go get it and carry it through the middle.',1,'Winning it is right. Carrying through the middle with their center on your back is where it goes wrong; the wall is the safe lane.',null)
+  ]);
+  return {caption:`A rimmed puck has died on the ${sideWord(s)} half-wall in your zone, about 10 feet from you and from their center. Nobody has it yet.`,q};}}
+];
+
+/* ---- Question types ----
+   Each type implements: render(host, q, submit)  -> draws the question UI (and may set rinkHandler for taps on the ice); calls submit(answer) once
+                         grade(q, answer)         -> {grade 0|1|2, chosen, feedback, modelText, plan}
+                         reveal(host, q, answer)  -> marks the UI and the rink (quiz.marks) after grading
+   quiz.marks is a list of overlays drawn by renderQ(): {k:'target',x,y,r1,r2} {k:'dot',x,y,ok} {k:'ring',id,ok} {k:'tag',id,text,ok}
+   Future types (e.g. 'draw': trace a route; 'connect': link players to roles) register here and get the same lifecycle. */
+const qTypes={
+  choice:{
+    render(host,q,submit){
+      host.innerHTML='';rinkHandler=null;
+      const wrap=document.createElement('div');wrap.className='opts';
+      const ord=q.options.map((o,i)=>i).sort(()=>Math.random()-.5);
+      for(const i of ord){const b=document.createElement('button');b.className='opt';b.dataset.i=i;b.textContent=q.options[i].text;b.onclick=()=>submit(i);wrap.appendChild(b);}
+      host.appendChild(wrap);
+    },
+    grade(q,i){const o=q.options[i];const best=q.options.find(x=>x.grade===2)||o;return{grade:o.grade,chosen:o.text,feedback:o.feedback,modelText:best.text,plan:best.plan};},
+    reveal(host,q,i){for(const b of host.querySelectorAll('.opt')){const k=Number(b.dataset.i);b.disabled=true;const g=q.options[k].grade;if(k===i)b.classList.add(g===2?'correct':(g===1?'partial':'wrong'));else if(g===2)b.classList.add('correct');}}
+  },
+  spot:{
+    render(host,q,submit){
+      host.innerHTML='<p class="tapcue"><i></i>Tap a spot on the rink</p>';
+      rinkHandler=a=>{submit({x:a.x,y:a.y});};
+    },
+    grade(q,a){
+      const d=dist(a,q.target);const g=d<=q.r1?2:(d<=q.r2?1:0);
+      return{grade:g,chosen:lateral(a.x)+', '+depth(a.y)+' ('+Math.round(d)+' ft from the spot)',feedback:g===2?q.fb.right:(g===1?q.fb.close:q.fb.wrong),modelText:q.label+': '+lateral(q.target.x)+', '+depth(q.target.y),plan:q.plan};
+    },
+    reveal(host,q,a){
+      host.innerHTML='';rinkHandler=null;
+      const d=dist(a,q.target);
+      quiz.marks=[{k:'target',x:q.target.x,y:q.target.y,r1:q.r1,r2:q.r2},{k:'dot',x:a.x,y:a.y,ok:d<=q.r1?2:(d<=q.r2?1:0)}];
+    }
+  },
+  order:{
+    render(host,q,submit){
+      const picked=[];
+      const draw=()=>{host.innerHTML='<p class="tapcue"><i></i>'+(picked.length<3?'Tap the forward who is <b>'+q.roles[picked.length]+'</b>':'')+'</p>';};
+      draw();
+      quiz.marks=[];
+      rinkHandler=a=>{
+        if(!a.id)return;const p=f(a.id);
+        if(!p||p.team!=='us'||p.label==='G'||p.label==='LD'||p.label==='RD'||picked.includes(a.id))return;
+        picked.push(a.id);quiz.marks.push({k:'tag',id:a.id,text:q.roles[picked.length-1],ok:null});render();draw();
+        if(picked.length===3)submit(picked.slice());
+      };
+    },
+    grade(q,a){
+      const all=a.every((id,i)=>id===q.ids[i]);const g=all?2:(a[0]===q.ids[0]?1:0);
+      return{grade:g,chosen:a.map((id,i)=>q.roles[i]+' '+f(id).label).join(', '),feedback:all?q.fb.right:(g===1?q.fb.f1:q.fb.wrong),modelText:q.ids.map((id,i)=>q.roles[i]+' '+f(id).label).join(', '),plan:q.plan};
+    },
+    reveal(host,q,a){
+      host.innerHTML='';rinkHandler=null;
+      quiz.marks=q.ids.map((id,i)=>({k:'tag',id,text:q.roles[i],ok:a[i]===id?2:0}));
+    }
+  },
+  pick:{
+    render(host,q,submit){
+      host.innerHTML='<p class="tapcue"><i></i>Tap a player on the rink</p>';
+      rinkHandler=a=>{if(a.id)submit(a.id);};
+    },
+    grade(q,a){
+      const g=a===q.answer?2:(q.partial.includes(a)?1:0);
+      return{grade:g,chosen:nameOf(a),feedback:g===2?q.fb.right:(g===1?q.fb.partial:q.fb.wrong),modelText:nameOf(q.answer),plan:q.plan};
+    },
+    reveal(host,q,a){
+      host.innerHTML='';rinkHandler=null;
+      quiz.marks=[{k:'ring',id:q.answer,ok:2}];if(a!==q.answer)quiz.marks.push({k:'ring',id:a,ok:q.partial.includes(a)?1:0});
+    }
+  }
+};
+function renderQ(){
+  const g=document.getElementById('qmarks');if(!quiz.on||!quiz.marks||!quiz.marks.length){g.innerHTML='';return;}
+  const col=ok=>ok===2?'#1D9E75':(ok===1?'#EF9F27':(ok===0?'#D85A30':'#185FA5'));
+  let out='';
+  for(const m of quiz.marks){
+    if(m.k==='target'){const cx=m.x*S,cy=(200-m.y)*S;out+=`<circle cx="${cx}" cy="${cy}" r="${m.r2*S}" fill="#1D9E75" fill-opacity=".08" stroke="#1D9E75" stroke-width="3" stroke-dasharray="10 10"/><circle cx="${cx}" cy="${cy}" r="${m.r1*S}" fill="#1D9E75" fill-opacity=".18" stroke="#1D9E75" stroke-width="4"/>`;}
+    else if(m.k==='dot'){const cx=m.x*S,cy=(200-m.y)*S;out+=`<circle cx="${cx}" cy="${cy}" r="18" fill="${col(m.ok)}" stroke="#fff" stroke-width="4"/><text x="${cx}" y="${cy-28}" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="600" font-size="28" fill="${col(m.ok)}">You</text>`;}
+    else if(m.k==='ring'){const p=f(m.id);if(!p)continue;const {cx,cy}=px(p);out+=`<circle cx="${cx}" cy="${cy}" r="${R+16}" fill="none" stroke="${col(m.ok)}" stroke-width="8" opacity=".9"/>`;}
+    else if(m.k==='tag'){const p=f(m.id);if(!p)continue;const {cx,cy}=px(p);out+=`<rect x="${cx-34}" y="${cy-R-58}" width="68" height="40" rx="8" fill="${col(m.ok)}"/><text x="${cx}" y="${cy-R-37}" text-anchor="middle" dominant-baseline="central" font-family="Barlow Condensed,sans-serif" font-weight="600" font-size="30" fill="#fff">${m.text}</text>`;}
+  }
+  g.innerHTML=out;
+}
+
+let quiz={on:false,caption:'',name:'',q:null,answered:false,done:0,pts:0,right:0,last:-1,marks:[]};
+function newSituation(){
+  state.players=base();state.me='rw';state.loose=null;
+  let i;do{i=Math.floor(Math.random()*scenarios.length);}while(scenarios.length>1&&i===quiz.last);quiz.last=i;
+  const s=Math.random()<.5?1:-1;
+  quiz.marks=[];rinkHandler=null;
+  const built=scenarios[i].build(s);quiz.caption=built.caption;quiz.q=built.q;quiz.name=scenarios[i].name;quiz.answered=false;autoFace();
+  sel=null;clearPlan();ans.classList.add('hidden');
+  document.getElementById('qTitle').textContent=quiz.name;
+  document.getElementById('qCaption').textContent=quiz.caption;
+  document.getElementById('qPrompt').textContent=quiz.q.prompt;
+  document.getElementById('qHint').textContent='';
+  document.getElementById('qCoach').classList.add('hidden');
+  const ct=document.getElementById('qCoachText');ct.classList.add('hidden');ct.textContent='';
+  qTypes[quiz.q.type].render(document.getElementById('qBody'),quiz.q,submitAnswer);
+  save();render();showSheet(document.getElementById('quiz'));window.scrollTo({top:0,behavior:'smooth'});
+}
+function submitAnswer(answer){
+  if(quiz.answered||!quiz.q)return;quiz.answered=true;
+  const q=quiz.q,t=qTypes[q.type];
+  const r=t.grade(q,answer);t.reveal(document.getElementById('qBody'),q,answer);render();
+  quiz.done++;quiz.pts+=r.grade;if(r.grade===2)quiz.right++;
+  document.getElementById('qScore').textContent=quiz.right+' right of '+quiz.done;
+  quiz.lastResult=r;
+  if(r.plan){
+    const moves=r.plan.moves.map(m=>({id:m[0],x:m[1],y:m[2]}));const me=moves.find(m=>m.id===state.me);
+    applyPlan({move:me?{x:me.x,y:me.y,label:r.plan.label}:{x:f(state.me).x,y:f(state.me).y,label:r.plan.label},seconds:r.plan.seconds,moves,puck:r.plan.puck});
+  }
+  setLabels('You picked','Why','Model play','Go to');
+  const verdict=r.grade===2?'Right':(r.grade===1?'Close':'Not this one');
+  document.getElementById('aRead').textContent=verdict;
+  document.getElementById('aMove').textContent=r.chosen;
+  document.getElementById('aWhy').textContent=r.feedback;
+  document.getElementById('aStick').textContent=r.modelText;
+  document.getElementById('aWatch').textContent=r.plan?spotText():'\u2014';
+  ans.classList.add('quizmode');ans.classList.remove('hidden');
+  document.getElementById('qHint').textContent=r.plan?'The model play is loaded in the player below.':'';
+  if(sampleFn)document.getElementById('qCoach').classList.remove('hidden');
+  renderReco();showSheet(ans);
+}
+function setMode(on){
+  quiz.on=on;
+  document.getElementById('tabBoard').classList.toggle('on',!on);
+  document.getElementById('tabQuiz').classList.toggle('on',on);
+  document.getElementById('quiz').classList.toggle('hidden',!on);
+  document.getElementById('askCard').classList.toggle('hidden',on);
+  document.getElementById('panel').classList.toggle('hidden',on);
+  document.querySelector('.presets').classList.toggle('hidden',on);
+  document.getElementById('subline').textContent=on?'Read the situation, answer on the rink or below, and see why.':'Drag players into place, give someone the puck, set skating directions, then ask what the right wing should do.';
+  ans.classList.add('hidden');clearPlan();if(!on){rinkHandler=null;}
+  if(on&&!quiz.q)newSituation();else render();
+}
+document.getElementById('tabBoard').onclick=()=>setMode(false);
+document.getElementById('tabQuiz').onclick=()=>setMode(true);
+document.getElementById('qNew').onclick=newSituation;
+function coachPrompt(){
+  const r=quiz.lastResult;
+  const lines=state.players.filter(p=>!p.off).map(p=>{
+    const who=(p.team==='us'?'MY TEAM ':'OPPONENT ')+p.label+(p.id===state.me?' (THIS IS ME)':'');
+    return `- ${who}: ${zone(p.y)}, ${lateral(p.x)}, ${depth(p.y)} [x=${p.x.toFixed(0)} ft, y=${p.y.toFixed(0)} ft]; ${headDesc(p.h,faceOf(p))}${state.puck===p.id?'; HAS THE PUCK':''}`;
+  }).join('\n');
+  return `You are an experienced ice hockey coach. I am a recreational right wing (right shot) learning to read the game in roles: F1/F2/F3 by arrival, strong vs weak side, high vs low, read-fill-recover. Coordinates: x 0-85 ft (left to right facing up ice), y 0-200 ft (0 = behind my net, 75 = my blue line, 125 = their blue line, 200 = behind their net).
+
+SITUATION: ${quiz.caption}
+${lines}
+
+QUESTION: ${quiz.q.prompt}
+I PICKED: ${r.chosen}
+THE DRILL'S VERDICT: ${['Not this one','Close','Right'][r.grade]}. ${r.feedback}
+THE MODEL PLAY: ${r.modelText}
+
+In at most 110 words of plain prose, no headings or lists: explain the read one level deeper than the verdict does, name the one cue I should look for next time to recognise this situation, and say what would change the answer. Do not repeat the verdict text.`;
+}
+document.getElementById('qCoach').onclick=async()=>{
+  if(!sampleFn||!quiz.lastResult)return;
+  const btn=document.getElementById('qCoach'),out=document.getElementById('qCoachText');
+  btn.disabled=true;out.classList.remove('hidden');out.innerHTML='<span class="thinking pulse">Coach is thinking\u2026</span>';
+  ctl=new AbortController();
+  try{
+    const {text}=await sampleFn(coachPrompt(),{signal:ctl.signal,modelTier:'default',onText:({text})=>{out.textContent=text;}});
+    out.textContent=text;
+  }catch(e){out.innerHTML='<span class="err">'+esc(errCopy[e&&e.code]||'Something went wrong. Try again.')+'</span>';}
+  finally{btn.disabled=false;}
+};
+let sampleFn=null,ctl=null;
+const askBtn=document.getElementById('askBtn'),cancelBtn=document.getElementById('cancelBtn'),askHint=document.getElementById('askHint'),ans=document.getElementById('answer');
+askBtn.disabled=true;askHint.textContent='Connecting to Claude…';
+claude.use('sample').then(s=>{
+  sampleFn=s;
+  if(!s){askHint.textContent='Recommendations need Claude, which isn\'t available in this view. The board still works.';return;}
+  askBtn.disabled=false;askHint.textContent='Uses your Claude account. Each answer looks only at the current board.';
+});
+const errCopy={not_granted:'Claude access wasn\'t allowed for this page.',rate_limited:'Too many requests right now. Try again in a minute.',refused:'Claude declined this request. Change the board and try again.',invalid_json:'The answer came back in an unexpected shape. Try again.',upstream_error:'Connection problem. Try again.',session_expired:'Sign in again to keep using recommendations.'};
+function applyPlan(r){
+  const mx=Number(r.move.x),my=Number(r.move.y);
+  if(Number.isFinite(mx)&&Number.isFinite(my)){reco={x:Math.max(1,Math.min(84,mx)),y:Math.max(1,Math.min(199,my)),label:String(r.move.label||'')};}
+  const secs=Math.max(1.5,Math.min(5,Number(r.seconds)||3));
+  const moves={};
+  if(Array.isArray(r.moves))for(const m of r.moves){const p=f(String(m.id));const x=Number(m.x),y=Number(m.y);if(!p||!Number.isFinite(x)||!Number.isFinite(y))continue;
+    const dx=x-p.x,dy=y-p.y,d=Math.hypot(dx,dy),max=secs*25;const k=d>max?max/d:1;
+    moves[p.id]={x:Math.max(1,Math.min(84,p.x+dx*k)),y:Math.max(1,Math.min(199,p.y+dy*k))};}
+  if(reco)moves[state.me]={x:reco.x,y:reco.y};
+  let to=r.puck&&f(String(r.puck.to))?String(r.puck.to):state.puck;
+  let at=Number(r.puck&&r.puck.at);if(!Number.isFinite(at))at=1;at=Math.max(0,Math.min(1,at));
+  plan={seconds:secs,moves,puck:{to,at}};
+  play.t=0;stopPlay();syncPlayUI();document.getElementById('play').classList.remove('hidden');
+}
+askBtn.onclick=async()=>{
+  if(!sampleFn)return;
+  ctl=new AbortController();
+  askBtn.disabled=true;askBtn.parentNode.appendChild(cancelBtn);cancelBtn.classList.remove('hidden');
+  ans.classList.add('hidden');clearPlan();render();
+  askHint.innerHTML='<span class="thinking pulse">Reading the board…</span>';
+  try{
+    const r=await sampleFn.json(describe(),{signal:ctl.signal,modelTier:'default',cache:false});
+    if(!r||typeof r!=='object'||!r.move)throw{code:'invalid_json',message:'shape'};
+    applyPlan(r);
+    setLabels('Go to','Why','Stick and body','Watch for');
+    document.getElementById('aRead').textContent=String(r.read||'');
+    document.getElementById('aMove').textContent=spotText();
+    document.getElementById('aWhy').textContent=String(r.why||'');
+    document.getElementById('aStick').textContent=String(r.stick||'');
+    document.getElementById('aWatch').textContent=String(r.watch||'');
+    ans.classList.remove('quizmode');ans.classList.remove('hidden');askHint.textContent='Move someone and ask again to compare.';showSheet(ans);
+    renderReco();
+  }catch(e){
+    if(e&&e.code==='cancelled'){askHint.textContent='Stopped.';}
+    else{const c=e&&e.code;askHint.innerHTML='<span class="err">'+esc(errCopy[c]||'Something went wrong. Try again.')+'</span>';if(c==='not_granted'||c==='sampling_disabled'||c==='not_declared'){sampleFn=null;}}
+  }finally{
+    cancelBtn.classList.add('hidden');if(sampleFn)askBtn.disabled=false;
+  }
+};
+cancelBtn.onclick=()=>{if(ctl)ctl.abort();};
+function setLabels(a,b,c,d){document.getElementById('lMove').textContent=a;document.getElementById('lWhy').textContent=b;document.getElementById('lStick').textContent=c;document.getElementById('lWatch').textContent=d;}
+function spotText(){return reco?(reco.label?reco.label+' — ':'')+lateral(reco.x)+', '+depth(reco.y):'(no spot given)';}
+const playBtn=document.getElementById('playBtn'),rewindBtn=document.getElementById('rewindBtn'),commitBtn=document.getElementById('commitBtn'),scrub=document.getElementById('scrub'),speedIn=document.getElementById('speed'),speedOut=document.getElementById('speedOut'),playHint=document.getElementById('playHint');
+function syncPlayUI(){
+  if(!plan)return;
+  scrub.value=Math.round(1000*play.t/plan.seconds);
+  playBtn.textContent=play.running?'Pause':(play.t>=plan.seconds?'Play again':(play.t>0?'Resume':'Play it out'));
+  speedOut.textContent=play.speed+'×';
+  playHint.textContent=play.t>=plan.seconds?'End of the sequence. Keep these positions to ask what comes next.':(play.t>0?'Paused at '+play.t.toFixed(1)+' s.':'Plays the next '+plan.seconds+' seconds as suggested: your move, plus how the others likely react.');
+}
+function stopPlay(){play.running=false;if(play.raf)cancelAnimationFrame(play.raf);play.raf=null;}
+function tick(now){
+  if(!play.running||!plan){return;}
+  const dt=(now-play.last)/1000;play.last=now;
+  play.t=Math.min(plan.seconds,play.t+dt*play.speed);
+  render();syncPlayUI();
+  if(play.t>=plan.seconds){stopPlay();syncPlayUI();return;}
+  play.raf=requestAnimationFrame(tick);
+}
+playBtn.onclick=()=>{
+  if(!plan)return;
+  if(play.running){stopPlay();syncPlayUI();return;}
+  if(play.t>=plan.seconds)play.t=0;
+  play.running=true;play.last=performance.now();play.raf=requestAnimationFrame(tick);syncPlayUI();
+};
+rewindBtn.onclick=()=>{stopPlay();play.t=0;render();syncPlayUI();};
+scrub.oninput=()=>{if(!plan)return;stopPlay();play.t=plan.seconds*Number(scrub.value)/1000;render();syncPlayUI();};
+speedIn.oninput=()=>{play.speed=Number(speedIn.value);syncPlayUI();};
+commitBtn.onclick=()=>{
+  if(!plan)return;
+  stopPlay();
+  for(const p of state.players){const m=plan.moves[p.id];if(m){const dx=m.x-p.x,dy=m.y-p.y;if(Math.abs(dx)+Math.abs(dy)>=1)p.fa=Math.round((Math.atan2(dx,dy)*180/Math.PI+360)%360);p.x=m.x;p.y=m.y;p.h=null;}}
+  state.puck=plan.puck.to;
+  clearPlan();ans.classList.add('hidden');askHint.textContent='Board updated to the end of the sequence. Ask again for the next read.';
+  save();render();
+};
+
+render();
+const sheet=document.getElementById('sheet'),sheetBody=document.getElementById('sheetBody'),handleText=document.getElementById('handleText');
+document.getElementById('handle').onclick=()=>{sheet.classList.toggle('collapsed');handleText.textContent=sheet.classList.contains('collapsed')?'Show panel':'Hide panel';};
+function showSheet(el){sheet.classList.remove('collapsed');handleText.textContent='Hide panel';if(el)setTimeout(()=>{sheetBody.scrollTo({top:Math.max(0,el.offsetTop-sheetBody.offsetTop-6),behavior:'smooth'});},60);}
+})();
+</script>
+</body>
+</html>

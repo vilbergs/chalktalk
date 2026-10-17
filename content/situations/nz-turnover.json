@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "id": "nz-turnover",
+  "name": "Neutral-zone turnover",
+  "status": "published",
+  "tags": ["neutral-zone", "forecheck", "roles"],
+  "caption": "Loose play in the neutral zone. Their D has just picked up a turnover near their blue line and is looking up. Your three forwards are scattered at different depths.",
+  "layout": {
+    "players": [
+      { "id": "old", "x": { "m": 52.5 }, "y": 118, "fa": 180 },
+      { "id": "ord", "x": { "m": 22.5 }, "y": 112 },
+      { "id": "og", "x": 42.5, "y": 187 },
+      { "id": "oc", "x": 42.5, "y": 135, "h": 0 },
+      { "id": "olw", "x": { "m": 72.5 }, "y": 140, "h": 0 },
+      { "id": "orw", "x": { "m": 12.5 }, "y": 138, "h": 0 },
+      { "id": "rd", "x": 58, "y": 84 },
+      { "id": "ld", "x": 27, "y": 86 },
+      { "id": "g", "x": 42.5, "y": 13 }
+    ],
+    "puck": "old"
+  },
+  "variants": [
+    {
+      "id": "center-deep",
+      "players": [
+        { "id": "c", "x": { "m": 40.5 }, "y": 128, "h": 180 },
+        { "id": "rw", "x": { "m": 66.5 }, "y": 120, "h": 180 },
+        { "id": "lw", "x": { "m": 16.5 }, "y": 104, "h": 180 }
+      ]
+    },
+    {
+      "id": "center-high",
+      "players": [
+        { "id": "c", "x": 42.5, "y": 100, "h": 180 },
+        { "id": "rw", "x": { "m": 60.5 }, "y": 130, "h": 180 },
+        { "id": "lw", "x": { "m": 18.5 }, "y": 112, "h": 180 }
+      ]
+    },
+    {
+      "id": "spread",
+      "players": [
+        { "id": "c", "x": { "m": 48.5 }, "y": 108, "h": 180 },
+        { "id": "rw", "x": { "m": 70.5 }, "y": 134, "h": 180 },
+        { "id": "lw", "x": { "m": 22.5 }, "y": 128, "h": 180 }
+      ]
+    }
+  ],
+  "arrival": { "to": "old" },
+  "questions": [
+    {
+      "id": "nz-turnover-order",
+      "type": "order",
+      "prompt": "Their D just picked up a turnover. Tap your forwards in the order they take F1, F2 and F3.",
+      "answer": ["$F1", "$F2", "$F3"],
+      "fb": {
+        "right": "Right. Same rule as the forecheck in their zone: closest is F1, next is F2 on his best outlet, and the furthest forward stays high so nobody gets behind you.",
+        "f1": "F1 is right. Count outward from there: the next closest forward is F2, whoever that is.",
+        "wrong": "Forget positions and look at distances. Who reaches their D first? That is F1. Then the next closest, then the last one stays high."
+      },
+      "plan": {
+        "label": "Forecheck by arrival",
+        "seconds": 3,
+        "moves": [
+          ["$F1", {"m": 50.5}, 112],
+          ["$F2", {"m": 36.5}, 120],
+          ["$F3", 42.5, 100],
+          ["old", {"m": 38.5}, 108]
+        ],
+        "puck": { "to": "$F2", "at": 0.8 }
+      }
+    }
+  ]
+}

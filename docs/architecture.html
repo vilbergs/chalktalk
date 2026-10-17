@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Winger's board: architecture</title>
+<style>
+:root {
+  --bg: #f4f6f8; --card: #fff; --ink: #17222b; --muted: #5d6b76; --line: #dfe5ea; --soft: #eef2f5;
+  --slate: #56697a; --accent: #185fa5; --teal: #1d9e75; --amber: #c47f12; --plum: #7a4fa3; --coral: #d85a30;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0f171d; --card: #18232c; --ink: #e8edf1; --muted: #9aa8b3; --line: #2a3742; --soft: #1f2c36;
+    --slate: #8ea3b5; --accent: #5a9be0; --teal: #3cc196; --amber: #e5a53d; --plum: #b48be0; --coral: #ee7d55; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 system-ui, -apple-system, sans-serif; }
+main { max-width: 1040px; margin: 0 auto; padding: 32px 20px 48px; }
+h1 { font: 600 34px/1.1 "Barlow Condensed", "Avenir Next Condensed", "Arial Narrow", system-ui, sans-serif; margin: 0; }
+.lede { color: var(--muted); margin: 6px 0 20px; max-width: 720px; }
+code { font: 12.5px ui-monospace, "SF Mono", Menlo, monospace; color: var(--muted); }
+
+.model { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 6px 16px; }
+.layer { display: grid; grid-template-columns: 120px 1fr; gap: 14px; padding: 12px 0; border-top: 1px solid var(--line); }
+.layer:first-child { border-top: none; }
+.name { font-weight: 600; padding-top: 6px; border-left: 4px solid var(--c); padding-left: 10px; }
+.name small { display: block; font-weight: 400; font-size: 12px; color: var(--muted); }
+.boxes { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
+.box { background: var(--soft); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+.box b { display: block; }
+.box.later { background: transparent; border-style: dashed; color: var(--muted); }
+.down { text-align: center; color: var(--muted); font-size: 12px; margin: 10px 0 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Winger's board: architecture</h1>
+  <p class="lede">A Vue 3 + TypeScript app in a Tauri 2 shell for iPhone. It runs fully offline, with no AI and no backend. Each layer depends only on the layers below it.</p>
+
+  <div class="model">
+    <div class="layer" style="--c: var(--slate)">
+      <div class="name">Shell<small>device and host</small></div>
+      <div class="boxes">
+        <div class="box"><b>Tauri 2</b><code>src-tauri/</code></div>
+        <div class="box"><b>App shell and tabs</b><code>main.ts · App.vue</code></div>
+      </div>
+    </div>
+    <div class="layer" style="--c: var(--accent)">
+      <div class="name">Screens</div>
+      <div class="boxes">
+        <div class="box"><b>Free board</b><code>board/BoardView.vue</code></div>
+        <div class="box"><b>Quiz</b><code>quiz/QuizView.vue</code></div>
+      </div>
+    </div>
+    <div class="layer" style="--c: var(--teal)">
+      <div class="name">Components</div>
+      <div class="boxes">
+        <div class="box"><b>Rink</b><code>rink/</code></div>
+        <div class="box"><b>Question components</b><code>quiz/types/*.vue</code></div>
+        <div class="box"><b>Playback</b><code>playback/usePlayback.ts</code></div>
+        <div class="box"><b>Bottom sheet</b><code>sheet/</code></div>
+      </div>
+    </div>
+    <div class="layer" style="--c: var(--amber)">
+      <div class="name">State</div>
+      <div class="boxes">
+        <div class="box"><b>Board store</b><code>board/store.ts · localStorage</code></div>
+        <div class="box"><b>Quiz session</b><code>quiz/store.ts</code></div>
+      </div>
+    </div>
+    <div class="layer" style="--c: var(--plum)">
+      <div class="name">Domain<small>pure TypeScript</small></div>
+      <div class="boxes">
+        <div class="box"><b>Board model</b><code>model/</code></div>
+        <div class="box"><b>Plans</b><code>playback/plan.ts</code></div>
+        <div class="box"><b>Grading</b><code>quiz/types/*.ts</code></div>
+        <div class="box"><b>Resolver</b><code>content/resolve.ts</code></div>
+      </div>
+    </div>
+    <div class="layer" style="--c: var(--coral)">
+      <div class="name">Content</div>
+      <div class="boxes">
+        <div class="box"><b>ContentRepository</b><code>content/repository.ts</code></div>
+        <div class="box"><b>Situation files</b><code>content/situations/*.json</code></div>
+        <div class="box later"><b>SQLite</b><code>later</code></div>
+        <div class="box later"><b>PostgreSQL</b><code>later</code></div>
+      </div>
+    </div>
+  </div>
+  <p class="down">Dashed boxes are planned storage backends behind the same repository (see <code>content-store.md</code>).</p>
+</main>
+</body>
+</html>

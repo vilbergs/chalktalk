@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "id": "ozone-cycle",
+  "name": "Offensive-zone cycle",
+  "status": "published",
+  "tags": ["offensive-zone", "cycle", "support"],
+  "caption": "Your center has the puck on the {side} half-wall in their zone and is being pinned by their D. Your other winger is at the net front. Their winger on that side is sagging down from the point toward the slot.",
+  "layout": {
+    "players": [
+      { "id": "c", "x": { "m": 76.5 }, "y": 168, "h": 180 },
+      { "id": "old", "x": { "m": 70.5 }, "y": 174 },
+      { "id": "lw", "x": { "m": 48.5 }, "y": 182 },
+      { "id": "ord", "x": { "m": 36.5 }, "y": 178 },
+      { "id": "og", "x": 42.5, "y": 187 },
+      { "id": "oc", "x": { "m": 50.5 }, "y": 162 },
+      { "id": "olw", "x": { "m": 64.5 }, "y": 150, "h": { "m": 225 } },
+      { "id": "orw", "x": { "m": 20.5 }, "y": 138 },
+      { "id": "rw", "x": { "m": 72.5 }, "y": 145 },
+      { "id": "rd", "x": 62, "y": 124 },
+      { "id": "ld", "x": 24, "y": 124 },
+      { "id": "g", "x": 42.5, "y": 13 }
+    ],
+    "puck": "c"
+  },
+  "questions": [
+    {
+      "id": "ozone-cycle-choice",
+      "type": "choice",
+      "prompt": "Your center is pinned on the wall. What do you do?",
+      "options": [
+        {
+          "text": "Come down the wall behind him so he can bump the puck back to me and keep the cycle going.",
+          "grade": 2,
+          "feedback": "That is the cycle. The pinned player’s only safe outlet is low along the boards. You take it, he spins off to the net or the slot, and the D never get a clean look at the puck.",
+          "plan": {
+            "label": "Support the cycle",
+            "seconds": 3,
+            "moves": [
+              ["rw", {"m": 79.5}, 178],
+              ["c", {"m": 64.5}, 184],
+              ["lw", {"m": 46.5}, 184],
+              ["old", {"m": 72.5}, 180],
+              ["olw", {"m": 68.5}, 160]
+            ],
+            "puck": { "to": "rw", "at": 0.6 }
+          }
+        },
+        {
+          "text": "Go to the net front to get a tip or rebound.",
+          "grade": 1,
+          "feedback": "Your left wing is already there. Two at the net and nobody on the wall means the cycle dies and the puck goes to their D."
+        },
+        {
+          "text": "Stay at the top of the circle as the high forward so we are safe if they get it.",
+          "grade": 1,
+          "feedback": "Your D is high already. The cycle needs a body low. Staying high is only right if your D has pinched down the wall."
+        },
+        {
+          "text": "Cross to the far side to pull their winger with me and open the ice.",
+          "grade": 0,
+          "feedback": "That takes away his one outlet. He is pinned; the puck goes into the corner and their D wins it."
+        }
+      ]
+    },
+    {
+      "id": "ozone-cycle-spot",
+      "type": "spot",
+      "prompt": "Tap where you go to support him.",
+      "target": { "x": { "m": 79.5 }, "y": 177 },
+      "label": "Low on the wall",
+      "fb": {
+        "right": "On the wall, below him. He bumps it back to you and spins off; the cycle lives.",
+        "close": "Right lane, wrong depth. Support on a cycle comes from below the puck along the boards, not level with it.",
+        "wrong": "He is pinned, so his only outlet is low along the wall. Go there. The net and the slot are already taken."
+      },
+      "plan": {
+        "label": "Support the cycle",
+        "seconds": 3,
+        "moves": [
+          ["rw", {"m": 79.5}, 178],
+          ["c", {"m": 64.5}, 184],
+          ["lw", {"m": 46.5}, 184],
+          ["old", {"m": 72.5}, 180],
+          ["olw", {"m": 68.5}, 160]
+        ],
+        "puck": { "to": "rw", "at": 0.6 }
+      }
+    }
+  ]
+}

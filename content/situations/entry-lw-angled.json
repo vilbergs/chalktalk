@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "id": "entry-lw-angled",
+  "name": "Zone entry, LW angled off",
+  "status": "published",
+  "tags": ["neutral-zone", "zone-entry", "reading"],
+  "caption": "Your LW is carrying up the left boards but their D has stepped up and is angling him into the wall right at the blue line. You are on the right side, moving with him, just short of the line. He is going to have to chip it or lose it.",
+  "layout": {
+    "players": [
+      { "id": "lw", "x": 11, "y": 121, "h": 20 },
+      { "id": "c", "x": 40, "y": 113, "h": 0 },
+      { "id": "rw", "x": 68, "y": 113, "h": 0 },
+      { "id": "ld", "x": 28, "y": 90, "h": 0 },
+      { "id": "rd", "x": 58, "y": 88, "h": 0 },
+      { "id": "g", "x": 42.5, "y": 13 },
+      { "id": "ord", "x": 17, "y": 131, "h": 200 },
+      { "id": "old", "x": 52, "y": 142, "h": 180 },
+      { "id": "orw", "x": 20, "y": 106, "h": 0 },
+      { "id": "oc", "x": 42, "y": 100, "h": 0 },
+      { "id": "olw", "x": 70, "y": 98, "h": 0 },
+      { "id": "og", "x": 42.5, "y": 187 }
+    ],
+    "puck": "lw"
+  },
+  "questions": [
+    {
+      "id": "entry-lw-angled-choice",
+      "type": "choice",
+      "prompt": "Their D has stepped up on your LW at the line. What do you do?",
+      "options": [
+        {
+          "text": "Keep my speed but stay onside and read it: if he chips it past their D to my side I am F1 on it, if he loses it I am already above the puck to backcheck.",
+          "grade": 2,
+          "feedback": "That is the read. The far winger on a contested entry is either the first forechecker or the first backchecker, and you only find out in the next second. Be ready for both.",
+          "plan": {
+            "label": "Read the chip",
+            "seconds": 3,
+            "moves": [["lw", 16, 128], ["rw", 74, 150], ["c", 40, 138], ["ord", 18, 124], ["old", 56, 160], ["olw", 70, 118]],
+            "puck": { "to": "rw", "at": 0.85 }
+          }
+        },
+        {
+          "text": "Call for the pass across the blue line.",
+          "grade": 1,
+          "feedback": "A flat pass across the line past a stepping-up D is a turnover more often than not. It is an option only if your center has pulled their far D with him."
+        },
+        {
+          "text": "Drive hard into the zone now so I am in position when he gets it in.",
+          "grade": 0,
+          "feedback": "The puck has not crossed the line. Drive now and you are offside, and the whistle bails their D out."
+        },
+        {
+          "text": "Stop and wait at the line.",
+          "grade": 0,
+          "feedback": "If he chips it in you have no speed to win the race; if he loses it you are standing still while they break out. Keep moving."
+        }
+      ]
+    }
+  ]
+}
