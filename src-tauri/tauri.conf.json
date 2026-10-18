@@ -37,7 +37,8 @@
       "debugApplicationIdSuffix": ".debug"
     },
     "iOS": {
-      "minimumSystemVersion": "15.0"
+      "minimumSystemVersion": "15.0",
+      "developmentTeam": "QRT72ALADR"
     }
   }
 }

@@ -109,8 +109,9 @@ To add a question type: add its type to `quiz/model.ts`, its logic in `quiz/type
 - `bun run typecheck`
 - `bun run ios:dev`: run on simulator or a connected iPhone (pick in the prompt)
 - `bun run ios:build`: release build
+- `bun run ios:install`: standalone build installed on the connected iPhone (`IOS_DEVICE` picks one). With the free personal team an install lasts 7 days.
 
-Running on a physical iPhone needs a signing team: set `bundle.iOS.developmentTeam` in `src-tauri/tauri.conf.json` or `APPLE_DEVELOPMENT_TEAM` in the environment.
+Signing uses the personal team set in `bundle.iOS.developmentTeam` (`src-tauri/tauri.conf.json`); `APPLE_DEVELOPMENT_TEAM` overrides it. The first install on a phone needs the developer trusted in Settings > General > VPN & Device Management.
 
 `src-tauri/Cargo.toml` pins `libc = "=0.2.185"` for iOS. 0.2.190 gates `mach_task_self` to macOS only, which breaks `num_threads` (via tauri → cookie → time) on iOS. The pin survives `cargo update`; remove it once fixed upstream.
 

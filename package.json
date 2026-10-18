@@ -11,7 +11,8 @@
     "typecheck": "vue-tsc --noEmit",
     "tauri": "tauri",
     "ios:dev": "tauri ios dev",
-    "ios:build": "tauri ios build"
+    "ios:build": "tauri ios build",
+    "ios:install": "scripts/ios-install.sh"
   },
   "dependencies": {
     "@fontsource/barlow": "^5.3.0",
